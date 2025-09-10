@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
         .nav-sidebar {
@@ -24,6 +24,9 @@
             padding-top: 1rem;
             flex-shrink: 0;
             transition: width 0.3s ease, opacity 0.3s ease;
+            height: 100vh; /* Ensure full height */
+            position: sticky;
+            top: 0;
         }
         .nav-icon {
             font-size: 32px;
@@ -503,10 +506,9 @@
     </style>
 </head>
 <body class="bg-amber-50 text-neutral-700 antialiased">
-
-    <!-- This div will contain the dynamically loaded nav bar -->
-    <div id="nav-placeholder"></div>
-
+    <!-- Nav Sidebar Container -->
+    <div id="nav-sidebar-container"></div>
+    
     <!-- Main Content Area -->
     <div class="main-content-area">
         <header class="bg-white p-6 shadow-sm flex items-center justify-between flex-shrink-0">
@@ -1067,9 +1069,57 @@
             this.style.height = 'auto';
             this.style.height = this.scrollHeight + 'px';
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            
+
+        async function loadNavbar() {
+            try {
+                const response = await fetch('nav_sidebar.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const navHtml = await response.text();
+                document.getElementById('nav-sidebar-container').innerHTML = navHtml;
+                const currentPath = window.location.pathname.split('/').pop();
+                document.querySelectorAll('.nav-icon').forEach(icon => {
+                    const iconPath = icon.getAttribute('href');
+                    if (iconPath === currentPath) {
+                        icon.classList.add('active');
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching navigation bar:', error);
+                // Fallback to static nav if dynamic load fails
+                const staticNav = `
+                    <nav class="nav-sidebar">
+                        <div class="mb-8">
+                            <span class="text-xl font-bold">&#x2630;</span>
+                        </div>
+                        <div class="flex flex-col items-center space-y-4 flex-grow">
+                            <a href="index.html" class="nav-icon" title="Home">&#x2302;</a>
+                            <a href="tasks_component.html" class="nav-icon" title="Tasks">&#x1F4CB;</a>
+                            <a href="search_component.html" class="nav-icon" title="Claim Search">&#x1F50D;</a>
+                            <a href="collections_component.html" class="nav-icon active" title="Collections Tasks">&#x1F4B2;</a>
+                            <a href="escalations_component.html" class="nav-icon" title="Escalations">&#x26A1;</a>
+                            <a href="admin_component.html" class="nav-icon" title="Settings">&#x2699;</a>
+                        </div>
+                        <div class="mt-auto mb-4">
+                            <svg class="nexus-logo-svg" viewBox="0 0 75 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <text x="0" y="22" class="nexus-logo-text" fill="#00B09B">n</text>
+                                <text x="12" y="22" class="nexus-logo-text" fill="#00B09B">e</text>
+                                <text x="24" y="22" class="nexus-logo-text" fill="#808080">X</text>
+                                <circle cx="31.5" cy="5" r="2.5" fill="#808080"/>
+                                <text x="39" y="22" class="nexus-logo-text" fill="#FF69B4">u</text>
+                                <text x="54" y="22" class="nexus-logo-text" fill="#FF69B4">s</text>
+                            </svg>
+                        </div>
+                    </nav>
+                `;
+                document.getElementById('nav-sidebar-container').innerHTML = staticNav;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadNavbar();
+
             const currentSectionTitle = document.getElementById('currentSectionTitle');
             
             const taskMenuPopup = document.getElementById('taskMenuPopup');
@@ -2422,34 +2472,13 @@
             if (addFilterCriterionBtn) {
                 addFilterCriterionBtn.addEventListener('click', addFilterCriterion);
             }
-
-            // Function to load the navigation bar
-            async function loadNavbar() {
-                try {
-                    const response = await fetch('nav_sidebar.html');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const navHtml = await response.text();
-                    const navPlaceholder = document.getElementById('nav-placeholder');
-                    if (navPlaceholder) {
-                        navPlaceholder.innerHTML = navHtml;
-                        const navIcons = document.querySelectorAll('.nav-icon');
-                        navIcons.forEach(icon => {
-                            if (icon.href.includes(window.location.pathname.split('/').pop())) {
-                                icon.classList.add('active');
-                            }
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error fetching navigation bar:', error);
-                }
-            }
             
-            // Call the function to load the navigation bar
-            loadNavbar();
-            applyColumnPreferences();
-            addTaskIdLinkListeners();
+            // This event listener will be fired when the DOM is fully loaded.
+            document.addEventListener('DOMContentLoaded', async () => {
+                await loadNavbar();
+                applyColumnPreferences();
+                addTaskIdLinkListeners();
+            });
         });
     </script>
 </body>
