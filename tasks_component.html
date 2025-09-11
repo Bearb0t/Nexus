@@ -301,49 +301,6 @@
         .task-details-modal-table tbody tr:nth-child(odd) {
             background-color: #F9FAFB;
         }
-        .message-box-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        .message-box-content {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-        .message-box-content h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #374151;
-        }
-        .message-box-content p {
-            margin-bottom: 1.5rem;
-            color: #4A5568;
-        }
-        .message-box-content button {
-            background-color: #0D9488;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .message-box-content button:hover {
-            background-color: #067D6B;
-        }
         .column-pref-modal-content {
             background-color: white;
             padding: 1.5rem;
@@ -450,7 +407,7 @@
         }
         .resolve-grid-container {
             display: grid;
-            grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(120px, 1fr)) minmax(200px, 2fr);
+            grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(120px, 1fr)) minmax(200px, 2fr) minmax(50px, 0.5fr);
             gap: 0.5rem;
             align-items: center;
         }
@@ -461,7 +418,7 @@
             border-bottom: 1px solid #E2E8F0;
             text-align: left;
             display: grid;
-            grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(120px, 1fr)) minmax(200px, 2fr);
+            grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(120px, 1fr)) minmax(200px, 2fr) minmax(50px, 0.5fr);
             gap: 0.5rem;
         }
         .resolve-grid-header > div {
@@ -469,7 +426,7 @@
         }
         .resolve-grid-row {
             display: grid;
-            grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(120px, 1fr)) minmax(200px, 2fr);
+            grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(120px, 1fr)) minmax(200px, 2fr) minmax(50px, 0.5fr);
             gap: 0.5rem;
             align-items: center;
         }
@@ -918,7 +875,7 @@
                         <label for="pageSize75">75</label>
                         <input type="radio" id="pageSize100" name="pageSize" value="100">
                         <label for="pageSize100">100</label>
-                    </div>
+                    </p>
                 </div>
 
                 <div class="mt-6">
@@ -971,7 +928,7 @@
             </div>
         </div>
     </div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const navIcons = document.querySelectorAll('.nav-icon');
@@ -1049,7 +1006,6 @@
             const setAsDefaultCheckbox = document.getElementById('setAsDefault');
             const filterCriteriaContainer = document.getElementById('filterCriteriaContainer');
             const addFilterCriterionBtn = document.getElementById('addFilterCriterionBtn');
-            const filterIconTaskQueues = document.getElementById('filterIconTaskQueues');
 
             const allColumns = [
                 { display: 'ID', key: 'taskId', show: true, isLink: true },
@@ -1726,7 +1682,7 @@
                 moveToAvailableBtn.addEventListener('click', () => {
                     const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
                     selectedCheckboxes.forEach(checkbox => {
-                        const columnKey = checkbox.dataset.columnKey;
+                        const columnKey = checkbox.dataset.column-key;
                         const colIndex = allColumns.findIndex(col => col.key === columnKey);
                         if (colIndex > -1) {
                             allColumns[colIndex].show = false;
@@ -1740,7 +1696,7 @@
                 moveToDisplayedBtn.addEventListener('click', () => {
                     const selectedCheckboxes = availableColumnsList.querySelectorAll('input[type="checkbox"]:checked');
                     selectedCheckboxes.forEach(checkbox => {
-                        const columnKey = checkbox.dataset.columnKey;
+                        const columnKey = checkbox.dataset.column-key;
                         const colIndex = allColumns.findIndex(col => col.key === columnKey);
                         if (colIndex > -1) {
                             allColumns[colIndex].show = true;
@@ -1754,7 +1710,7 @@
                 moveUpBtn.addEventListener('click', () => {
                     const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
                     if (selectedCheckboxes.length === 1) {
-                        const columnKey = selectedCheckboxes[0].dataset.columnKey;
+                        const columnKey = selectedCheckboxes[0].dataset.column-key;
                         const displayedCols = allColumns.filter(col => col.show);
                         const index = displayedCols.findIndex(col => col.key === columnKey);
                         if (index > 0) {
@@ -1781,7 +1737,7 @@
                 moveDownBtn.addEventListener('click', () => {
                     const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
                     if (selectedCheckboxes.length === 1) {
-                        const columnKey = selectedCheckboxes[0].dataset.columnKey;
+                        const columnKey = selectedCheckboxes[0].dataset.column-key;
                         const displayedCols = allColumns.filter(col => col.show);
                         const index = displayedCols.findIndex(col => col.key === columnKey);
                         if (index < displayedCols.length - 1) {
@@ -1860,7 +1816,7 @@
 
                         if (colPref.isLink && (colKey === 'taskId' || colKey === 'claimId')) {
                             const idToUse = rowData.taskId || rowData.claimId;
-                            rowHtml += `<td><a href="task_detail_component.html?id=${idToUse}&source=taskTable" class="task-id-link" onclick="saveTaskDataToStorage('${idToUse}')">${cellContent}</a></td>`;
+                            rowHtml += `<td><a href="task_detail_component.html?id=${idToUse}&source=tasksData" class="task-id-link" onclick="saveTaskDataToStorage('${idToUse}', 'tasksData')">${cellContent}</a></td>`;
                         } else {
                             rowHtml += `<td>${cellContent}</td>`;
                         }
@@ -1879,11 +1835,19 @@
             }
 
             // Function to save task data to local storage when a link is clicked
-            window.saveTaskDataToStorage = function(taskId) {
-                const tasksDataFromStorage = JSON.parse(localStorage.getItem('tasksData')) || [];
-                const taskData = tasksDataFromStorage.find(task => task.taskId === taskId);
+            window.saveTaskDataToStorage = function(taskId, sourceTable) {
+                let dataArray = [];
+                if (sourceTable === 'tasksData') {
+                    dataArray = JSON.parse(localStorage.getItem('tasksData')) || [];
+                } else if (sourceTable === 'collectionsTasksData') {
+                    dataArray = JSON.parse(localStorage.getItem('collectionsTasksData')) || [];
+                } else if (sourceTable === 'escalatedTasks') {
+                    dataArray = JSON.parse(localStorage.getItem('escalatedTasks')) || [];
+                }
+                const taskData = dataArray.find(task => task.taskId === taskId);
                 if (taskData) {
                     localStorage.setItem('selectedTask', JSON.stringify(taskData));
+                    localStorage.setItem('selectedTaskSource', sourceTable);
                 }
             }
 
@@ -1893,7 +1857,7 @@
                         const taskId = event.target.dataset.taskId;
                         const sourceTable = event.target.dataset.sourceTable;
                         // The onclick event on the HTML element handles the saving
-                        // and navigation, so this is just for demonstration.
+                        // and navigation, so this is just for a fallback.
                     });
                 });
             }
