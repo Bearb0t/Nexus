@@ -466,39 +466,55 @@
             min-height: 38px;
             resize: vertical;
         }
-        @media (max-width: 768px) {
-            .main-content-area {
-                padding: 0.5rem;
-            }
-            .content-section {
-                margin: 0.5rem;
-            }
+        .nexus-logo-svg {
+            width: 60px;
+            height: auto;
         }
-        @media (max-width: 1024px) {
-            .resolve-grid-container, .resolve-grid-header {
-                grid-template-columns: 1fr;
-            }
-            .resolve-grid-header {
-                display: none;
-            }
-            .resolve-grid-row {
-                display: block;
-                border: 1px solid #E2E8F0;
-                padding: 1rem;
-                margin-bottom: 1rem;
-            }
-            .resolve-grid-row > div {
-                padding: 0.25rem 0;
-            }
-            .resolve-grid-row > div:nth-child(odd) {
-                font-weight: bold;
-                margin-top: 0.5rem;
-            }
-            .resolve-grid-row > div:first-child {
-                font-weight: bold;
-                font-size: 1.1em;
-                margin-bottom: 0.5rem;
-            }
+        .nexus-logo-text {
+            font-family: sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+        .file-upload-dropzone {
+            border: 2px dashed #D1D5DB;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            color: #6B7280;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+        .file-upload-dropzone.drag-over {
+            border-color: #0D9488;
+            background-color: #F0FDF4;
+        }
+        .file-list {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .file-list-item {
+            display: flex;
+            align-items: center;
+            background-color: #E5E7EB;
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+        .remove-file-btn {
+            font-size: 1rem;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+        .modal-body-scroll {
+            overflow-y: auto;
+            max-height: 65vh;
         }
     </style>
 </head>
@@ -781,6 +797,30 @@
                 </div>
                 <div id="collectionsTasksGridBody" class="flex flex-col gap-2 mt-4">
                 </div>
+            </div>
+
+            <div class="mt-4">
+                <h4 class="text-md font-semibold text-neutral-800 mb-2">Document Upload</h4>
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <div class="form-group md:w-1/2 !mb-0">
+                        <label for="documentType" class="block text-sm font-medium text-neutral-700 mb-1">Document Type</label>
+                        <select id="documentType" class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Select document type</option>
+                            <option value="Correspondence">Correspondence</option>
+                            <option value="Appeal">Appeal</option>
+                            <option value="Offset Approval">Offset Approval</option>
+                            <option value="Multiple Types">Multiple Types</option>
+                        </select>
+                    </div>
+                    <div class="form-group md:w-1/2 !mb-0">
+                        <label for="uploadDocument" class="block text-sm font-medium text-neutral-700 mb-1">Upload Document(s)</label>
+                        <div id="dropzone" class="file-upload-dropzone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                            Drag & drop files here or click to browse.
+                        </div>
+                        <input type="file" id="uploadDocument" multiple class="hidden">
+                    </div>
+                </div>
+                <div id="fileList" class="file-list"></div>
             </div>
 
             <h4 class="text-md font-semibold text-teal-700 mb-2 cursor-pointer" id="toggleResolveCollectionsTaskDetails">
@@ -1120,7 +1160,8 @@
             const taskMenuPopup = document.getElementById('taskMenuPopup');
             let ellipsisIcons = document.querySelectorAll('.table-custom .ellipsis-icon');
             let currentEllipsis = null;
-
+            let uploadedFiles = {};
+            
             // New buttons at the top of the grid
             const resolveMainBtn = document.getElementById('resolveBtn');
             const updateMainBtn = document.getElementById('updateBtn');
@@ -1214,19 +1255,24 @@
             const filterCriteriaContainer = document.getElementById('filterCriteriaContainer');
             const addFilterCriterionBtn = document.getElementById('addFilterCriterionBtn');
 
+            const dropzone = document.getElementById('dropzone');
+            const fileList = document.getElementById('fileList');
+            const uploadDocument = document.getElementById('uploadDocument');
+            const documentTypeSelect = document.getElementById('documentType');
+
             let collectionsTasksData = JSON.parse(localStorage.getItem('collectionsTasksData'));
             
             const initialCollectionsTasksData = [
-                { taskId: '10', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '261', claimId: '8', clientClaimNum: '-', stage: 'Not Contacted', client: 'ShadyInsurance', providerTaxId: '191388672', assignee: '-', overpayment: 47223.86, currentBalance: 47223.86, currentPriority: '4', createdOn: 'Oct 15, 2024 7:30 AM', description: 'Attempted to contact provider regarding overpayment. No response yet.', reasonCode: 'No Contact', providerName: 'Provider 10', phoneNumber: '555-101-1010', address: '100 Main St, Anytown, USA 12345', npi: 'NPI10101010', parIndicator: 'P', isFlagged: false },
-                { taskId: '11', name: 'Provider Contact', status: 'Escalated', followUpDate: '-', age: '259', claimId: '100', clientClaimNum: '-', stage: 'Not Contacted', client: 'ShadyInsurance', providerTaxId: '995631282', assignee: 'Steve Rogers', overpayment: 48791.69, currentBalance: 48791.69, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Multiple attempts to contact provider failed. Escalating for further action.', reasonCode: 'Repeated No Contact', providerName: 'Provider 11', phoneNumber: '555-111-1111', address: '111 Main St, Anytown, USA 12345', npi: 'NPI11111111', parIndicator: 'P', isFlagged: false },
-                { taskId: '12', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '2300', clientClaimNum: '-', stage: 'Not Contacted', client: 'NotOKInsurance', providerTaxId: '958833831', assignee: '-', overpayment: 34404.05, currentBalance: 34404.05, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'New collection task. Initial provider contact pending.', reasonCode: 'New Task', providerName: 'Provider 12', phoneNumber: '555-121-2121', address: '121 Main St, Anytown, USA 12345', npi: 'NPI12121212', parIndicator: 'P', isFlagged: false },
-                { taskId: '13', name: 'Provider Contact', status: 'Escalated', followUpDate: '-', age: '259', claimId: '2706', clientClaimNum: '-', stage: 'Not Contacted', client: 'NotOKInsurance', providerTaxId: '174190956', assignee: '-', overpayment: 33271.19, currentBalance: 33271.19, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Provider refusing to acknowledge overpayment. Escalating to legal.', reasonCode: 'Refusal to Pay', providerName: 'Provider 13', phoneNumber: '555-131-3131', address: '131 Main St, Anytown, USA 12345', npi: 'NPI13131313', parIndicator: 'P', isFlagged: false },
-                { taskId: '14', name: 'Provider Contact', status: 'Follow Up', followUpDate: '2025-08-20', age: '262', claimId: '3800', clientClaimNum: '-', stage: 'Not Contacted', client: 'WalkItOffIns', providerTaxId: '983673911', assignee: 'Steve Rogers', overpayment: 42629.81, currentBalance: 42629.81, currentPriority: '4', createdOn: 'Oct 14, 2024 9:04 AM', description: 'Provider requested more time to review. Follow up scheduled.', reasonCode: 'Awaiting Review', providerName: 'Provider 14', phoneNumber: '555-141-4141', address: '141 Main St, Anytown, USA 12345', npi: 'NPI14141414', parIndicator: 'P', isFlagged: false },
-                { taskId: '15', name: 'Provider Contact', status: 'Follow Up', followUpDate: '2025-08-22', age: '259', claimId: '3854', clientClaimNum: '-', stage: 'Not Contacted', client: 'WalkItOffIns', providerTaxId: '-', assignee: 'Steve Rogers', overpayment: 29750.87, currentBalance: 29750.87, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Awaiting internal team review before next contact attempt.', reasonCode: 'Internal Review', providerName: 'Provider 15', phoneNumber: '555-151-5151', address: '151 Main St, Anytown, USA 12345', npi: 'NPI15151515', parIndicator: 'P', isFlagged: false },
-                { taskId: '16', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '3375', clientClaimNum: '-', stage: 'No Prov Contact', client: 'NotOKInsurance', providerTaxId: '364714460', assignee: '-', overpayment: 5268.37, currentBalance: 5268.37, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'No provider contact information available. Researching.', reasonCode: 'No Provider Info', providerName: 'Provider 16', phoneNumber: '555-161-6161', address: '161 Main St, Anytown, USA 12345', npi: 'NPI16161616', parIndicator: 'P', isFlagged: false },
-                { taskId: '17', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '4300', clientClaimNum: '-', stage: 'No Prov Contact', client: 'WalkItOffIns', providerTaxId: '983673911', assignee: '-', overpayment: 33901.80, currentBalance: 33901.80, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Provider contact initiated, awaiting response for payment plan.', reasonCode: 'Payment Plan Inquiry', providerName: 'Provider 17', phoneNumber: '555-171-7171', address: '171 Main St, Anytown, USA 12345', npi: 'NPI17171717', parIndicator: 'P', isFlagged: false },
-                { taskId: '18', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '4185', clientClaimNum: '-', stage: 'No Prov Contact', client: 'WalkItOffIns', providerTaxId: '587400689', assignee: '-', overpayment: 27720.19, currentBalance: 27720.19, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Sent formal demand letter to provider. Awaiting payment.', reasonCode: 'Demand Letter Sent', providerName: 'Provider 18', phoneNumber: '555-181-8181', address: '181 Main St, Anytown, USA 12345', npi: 'NPI18181818', parIndicator: 'P', isFlagged: false },
-                { taskId: '19', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '1125', clientClaimNum: '-', stage: 'No Prov Contact', client: 'ShadyInsurance', providerTaxId: '440917458', assignee: '-', overpayment: 18658.07, currentBalance: 18658.07, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Followed up on previous contact attempt. No new information.', reasonCode: 'Follow-up', providerName: 'Provider 19', phoneNumber: '555-191-9191', address: '191 Main St, Anytown, USA 12345', npi: 'NPI19191919', parIndicator: 'P', isFlagged: false }
+                { taskId: '10', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '261', claimId: '8', clientClaimNum: '-', stage: 'Not Contacted', client: 'ShadyInsurance', providerTaxId: '191388672', assignee: '-', overpayment: 47223.86, currentBalance: 47223.86, currentPriority: '4', createdOn: 'Oct 15, 2024 7:30 AM', description: 'Attempted to contact provider regarding overpayment. No response yet.', reasonCode: 'No Contact', providerName: 'Provider 10', phoneNumber: '555-101-1010', address: '100 Main St, Anytown, USA 12345', npi: 'NPI10101010', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '11', name: 'Provider Contact', status: 'Escalated', followUpDate: '-', age: '259', claimId: '100', clientClaimNum: '-', stage: 'Not Contacted', client: 'ShadyInsurance', providerTaxId: '995631282', assignee: 'Steve Rogers', overpayment: 48791.69, currentBalance: 48791.69, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Multiple attempts to contact provider failed. Escalating for further action.', reasonCode: 'Repeated No Contact', providerName: 'Provider 11', phoneNumber: '555-111-1111', address: '111 Main St, Anytown, USA 12345', npi: 'NPI11111111', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '12', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '2300', clientClaimNum: '-', stage: 'Not Contacted', client: 'NotOKInsurance', providerTaxId: '958833831', assignee: '-', overpayment: 34404.05, currentBalance: 34404.05, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'New collection task. Initial provider contact pending.', reasonCode: 'New Task', providerName: 'Provider 12', phoneNumber: '555-121-2121', address: '121 Main St, Anytown, USA 12345', npi: 'NPI12121212', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '13', name: 'Provider Contact', status: 'Escalated', followUpDate: '-', age: '259', claimId: '2706', clientClaimNum: '-', stage: 'Not Contacted', client: 'NotOKInsurance', providerTaxId: '174190956', assignee: '-', overpayment: 33271.19, currentBalance: 33271.19, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Provider refusing to acknowledge overpayment. Escalating to legal.', reasonCode: 'Refusal to Pay', providerName: 'Provider 13', phoneNumber: '555-131-3131', address: '131 Main St, Anytown, USA 12345', npi: 'NPI13131313', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '14', name: 'Provider Contact', status: 'Follow Up', followUpDate: '2025-08-20', age: '262', claimId: '3800', clientClaimNum: '-', stage: 'Not Contacted', client: 'WalkItOffIns', providerTaxId: '983673911', assignee: 'Steve Rogers', overpayment: 42629.81, currentBalance: 42629.81, currentPriority: '4', createdOn: 'Oct 14, 2024 9:04 AM', description: 'Provider requested more time to review. Follow up scheduled.', reasonCode: 'Awaiting Review', providerName: 'Provider 14', phoneNumber: '555-141-4141', address: '141 Main St, Anytown, USA 12345', npi: 'NPI14141414', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '15', name: 'Provider Contact', status: 'Follow Up', followUpDate: '2025-08-22', age: '259', claimId: '3854', clientClaimNum: '-', stage: 'Not Contacted', client: 'WalkItOffIns', providerTaxId: '-', assignee: 'Steve Rogers', overpayment: 29750.87, currentBalance: 29750.87, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Awaiting internal team review before next contact attempt.', reasonCode: 'Internal Review', providerName: 'Provider 15', phoneNumber: '555-151-5151', address: '151 Main St, Anytown, USA 12345', npi: 'NPI15151515', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '16', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '3375', clientClaimNum: '-', stage: 'No Prov Contact', client: 'NotOKInsurance', providerTaxId: '364714460', assignee: '-', overpayment: 5268.37, currentBalance: 5268.37, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'No provider contact information available. Researching.', reasonCode: 'No Provider Info', providerName: 'Provider 16', phoneNumber: '555-161-6161', address: '161 Main St, Anytown, USA 12345', npi: 'NPI16161616', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '17', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '4300', clientClaimNum: '-', stage: 'No Prov Contact', client: 'WalkItOffIns', providerTaxId: '983673911', assignee: '-', overpayment: 33901.80, currentBalance: 33901.80, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Provider contact initiated, awaiting response for payment plan.', reasonCode: 'Payment Plan Inquiry', providerName: 'Provider 17', phoneNumber: '555-171-7171', address: '171 Main St, Anytown, USA 12345', npi: 'NPI17171717', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '18', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '4185', clientClaimNum: '-', stage: 'No Prov Contact', client: 'WalkItOffIns', providerTaxId: '587400689', assignee: '-', overpayment: 27720.19, currentBalance: 27720.19, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Sent formal demand letter to provider. Awaiting payment.', reasonCode: 'Demand Letter Sent', providerName: 'Provider 18', phoneNumber: '555-181-8181', address: '181 Main St, Anytown, USA 12345', npi: 'NPI18181818', parIndicator: 'P', isFlagged: false, attachments: [] },
+                { taskId: '19', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '259', claimId: '1125', clientClaimNum: '-', stage: 'No Prov Contact', client: 'ShadyInsurance', providerTaxId: '440917458', assignee: '-', overpayment: 18658.07, currentBalance: 18658.07, currentPriority: '4', createdOn: 'Oct 17, 2024 9:04 AM', description: 'Followed up on previous contact attempt. No new information.', reasonCode: 'Follow-up', providerName: 'Provider 19', phoneNumber: '555-191-9191', address: '191 Main St, Anytown, USA 12345', npi: 'NPI19191919', parIndicator: 'P', isFlagged: false, attachments: [] }
             ];
 
             if (!collectionsTasksData || collectionsTasksData.length === 0) {
@@ -1832,6 +1878,13 @@
                 submitResolveCollectionsTasksBtn.addEventListener('click', () => {
                     let allValid = true;
                     const resolvedTasksData = [];
+                    const uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '[]');
+                    const documentType = document.getElementById('documentType').value;
+                    
+                    if (uploadedFiles.length > 0 && !documentType) {
+                        showMessageBox('Input Required', 'Please select a document type.');
+                        return;
+                    }
 
                     document.querySelectorAll('#collectionsTasksGridBody .resolve-grid-row').forEach(row => {
                         const taskId = row.dataset.taskId;
@@ -1849,7 +1902,8 @@
                             contactType: contactType,
                             resolution: resolution,
                             note: note,
-                            isFlagged: isFlagged
+                            isFlagged: isFlagged,
+                            attachments: uploadedFiles.map(file => ({...file, type: documentType}))
                         });
                     });
 
@@ -1861,16 +1915,22 @@
                     const taskIds = resolvedTasksData.map(task => task.taskId).join(', ');
                     let summaryMessage = `Tasks ${taskIds} resolved!\n\n`;
                     resolvedTasksData.forEach(task => {
-                        summaryMessage += `Task ID: ${task.taskId}\n- Contact Type: ${task.contactType}\n- Resolution: ${task.resolution}\n- Note: ${task.note}\n- Flagged: ${task.isFlagged ? 'Yes' : 'No'}\n\n`;
-                        
+                        summaryMessage += `Task ID: ${task.taskId}\n- Contact Type: ${task.contactType}\n- Resolution: ${task.resolution}\n- Note: ${task.note}\n- Flagged: ${task.isFlagged ? 'Yes' : 'No'}\n`;
+                        if (task.attachments.length > 0) {
+                            summaryMessage += `- Attachments: ${task.attachments.map(a => `${a.name} (${a.type})`).join(', ')}\n`;
+                        }
+                        summaryMessage += '\n';
+
                         const taskIndex = collectionsTasksData.findIndex(t => t.taskId === task.taskId);
                         if (taskIndex > -1) {
                             collectionsTasksData[taskIndex].status = 'Completed';
                             collectionsTasksData[taskIndex].isFlagged = task.isFlagged;
+                            collectionsTasksData[taskIndex].attachments = [...(collectionsTasksData[taskIndex].attachments || []), ...task.attachments];
                         }
                     });
                     
                     localStorage.setItem('collectionsTasksData', JSON.stringify(collectionsTasksData));
+                    localStorage.removeItem('uploadedFiles'); // Clear uploaded files after submission
                     
                     showMessageBox('Resolution Submitted', summaryMessage);
                     
@@ -2466,6 +2526,89 @@
             }
             if (addFilterCriterionBtn) {
                 addFilterCriterionBtn.addEventListener('click', addFilterCriterion);
+            }
+            
+            const handleFiles = (files) => {
+                uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '[]');
+                
+                const filePromises = Array.from(files).map(file => {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            uploadedFiles.push({
+                                name: file.name,
+                                content: e.target.result,
+                                date: new Date().toISOString()
+                            });
+                            resolve();
+                        };
+                        reader.onerror = (e) => {
+                            reject(e);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                });
+                
+                Promise.all(filePromises).then(() => {
+                    localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                    renderFileList();
+                }).catch(error => {
+                    showMessageBox('Upload Error', 'Failed to read one or more files.');
+                });
+            }
+
+            const renderFileList = () => {
+                fileList.innerHTML = '';
+                uploadedFiles.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.classList.add('file-list-item');
+                    fileItem.innerHTML = `
+                        <span>${file.name}</span>
+                        <span class="remove-file-btn" data-index="${index}">&times;</span>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+                document.querySelectorAll('.remove-file-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const indexToRemove = parseInt(e.target.dataset.index);
+                        uploadedFiles.splice(indexToRemove, 1);
+                        localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                        renderFileList();
+                    });
+                });
+            };
+
+            const handleDragOver = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.target.classList.add('drag-over');
+            };
+
+            const handleDragLeave = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.target.classList.remove('drag-over');
+            };
+
+            const handleDrop = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.target.classList.remove('drag-over');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFiles(files);
+                }
+            };
+            
+            if (dropzone) {
+                dropzone.addEventListener('click', () => {
+                    uploadDocument.click();
+                });
+            }
+            if (uploadDocument) {
+                uploadDocument.addEventListener('change', (e) => {
+                    handleFiles(e.target.files);
+                });
             }
 
             applyColumnPreferences();
