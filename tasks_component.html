@@ -828,7 +828,7 @@
                 <h3 class="text-lg font-semibold text-neutral-800 mb-4">Column Preferences</h3>
                 <button class="w-full text-left p-2 rounded-md bg-purple-100 text-purple-800 font-medium mb-2">Default</button>
                 <button id="addNewPreferenceBtn" class="w-full text-left p-2 rounded-md text-purple-600 hover:bg-purple-50 flex items-center">
-                    <span class="text-xl mr-2">+</span> ADD NEW PREFERENCE
+                    <span class="text-xl mr-1">+</span> ADD NEW PREFERENCE
                 </button>
             </div>
             <div class="column-pref-main">
@@ -1682,7 +1682,7 @@
                 moveToAvailableBtn.addEventListener('click', () => {
                     const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
                     selectedCheckboxes.forEach(checkbox => {
-                        const columnKey = checkbox.dataset.column-key;
+                        const columnKey = checkbox.dataset.columnKey;
                         const colIndex = allColumns.findIndex(col => col.key === columnKey);
                         if (colIndex > -1) {
                             allColumns[colIndex].show = false;
@@ -1696,7 +1696,7 @@
                 moveToDisplayedBtn.addEventListener('click', () => {
                     const selectedCheckboxes = availableColumnsList.querySelectorAll('input[type="checkbox"]:checked');
                     selectedCheckboxes.forEach(checkbox => {
-                        const columnKey = checkbox.dataset.column-key;
+                        const columnKey = checkbox.dataset.columnKey;
                         const colIndex = allColumns.findIndex(col => col.key === columnKey);
                         if (colIndex > -1) {
                             allColumns[colIndex].show = true;
@@ -1710,7 +1710,7 @@
                 moveUpBtn.addEventListener('click', () => {
                     const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
                     if (selectedCheckboxes.length === 1) {
-                        const columnKey = selectedCheckboxes[0].dataset.column-key;
+                        const columnKey = selectedCheckboxes[0].dataset.columnKey;
                         const displayedCols = allColumns.filter(col => col.show);
                         const index = displayedCols.findIndex(col => col.key === columnKey);
                         if (index > 0) {
@@ -1737,7 +1737,7 @@
                 moveDownBtn.addEventListener('click', () => {
                     const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
                     if (selectedCheckboxes.length === 1) {
-                        const columnKey = selectedCheckboxes[0].dataset.column-key;
+                        const columnKey = selectedCheckboxes[0].dataset.columnKey;
                         const displayedCols = allColumns.filter(col => col.show);
                         const index = displayedCols.findIndex(col => col.key === columnKey);
                         if (index < displayedCols.length - 1) {
@@ -1816,7 +1816,8 @@
 
                         if (colPref.isLink && (colKey === 'taskId' || colKey === 'claimId')) {
                             const idToUse = rowData.taskId || rowData.claimId;
-                            rowHtml += `<td><a href="task_detail_component.html?id=${idToUse}&source=tasksData" class="task-id-link" onclick="saveTaskDataToStorage('${idToUse}', 'tasksData')">${cellContent}</a></td>`;
+                            // Update the HTML to use a data attribute for the task ID instead of onclick
+                            rowHtml += `<td><a href="task_detail_component.html?id=${idToUse}&source=tasksData" class="task-id-link" data-task-id="${idToUse}" data-source="tasksData">${cellContent}</a></td>`;
                         } else {
                             rowHtml += `<td>${cellContent}</td>`;
                         }
@@ -1834,8 +1835,8 @@
                 });
             }
 
-            // Function to save task data to local storage when a link is clicked
-            window.saveTaskDataToStorage = function(taskId, sourceTable) {
+            // This function is now local and used by the new event listener.
+            function saveTaskDataToStorage(taskId, sourceTable) {
                 let dataArray = [];
                 if (sourceTable === 'tasksData') {
                     dataArray = JSON.parse(localStorage.getItem('tasksData')) || [];
@@ -1854,10 +1855,11 @@
             function addTaskIdLinkListeners() {
                 document.querySelectorAll('.task-id-link').forEach(link => {
                     link.addEventListener('click', (event) => {
+                        event.preventDefault(); // Prevent default navigation
                         const taskId = event.target.dataset.taskId;
-                        const sourceTable = event.target.dataset.sourceTable;
-                        // The onclick event on the HTML element handles the saving
-                        // and navigation, so this is just for a fallback.
+                        const sourceTable = event.target.dataset.source;
+                        saveTaskDataToStorage(taskId, sourceTable);
+                        window.location.href = event.target.href; // Manually navigate after saving
                     });
                 });
             }
