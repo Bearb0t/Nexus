@@ -1240,7 +1240,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const currentSectionTitle = document.getElementById('currentSectionTitle');
             const taskDetailTitle = document.getElementById('taskDetailTitle');
             const taskDetailAssignee = document.getElementById('taskDetailAssignee');
             const taskDetailStatus = document.getElementById('taskDetailStatus');
@@ -1271,7 +1270,6 @@
             const taskDetailActivityContainer = document.getElementById('taskDetailActivityContainer');
             const filesTabContent = document.getElementById('tab-files');
             const notesTabContent = document.getElementById('tab-notes');
-
             const messageBoxOverlay = document.getElementById('messageBoxOverlay');
             const messageBoxTitle = document.getElementById('messageBoxTitle');
             const messageBoxContent = document.getElementById('messageBoxContent');
@@ -1313,45 +1311,19 @@
                 messageBoxOverlay.classList.add('hidden');
             });
 
-            function getQueryParams() {
-                const params = {};
-                window.location.search.substring(1).split('&').forEach(param => {
-                    const [key, value] = param.split('=');
-                    params[key] = decodeURIComponent(value);
-                });
-                return params;
-            }
-
             function loadTaskDetails() {
-                const params = getQueryParams();
-                const taskId = params.id;
-                const sourceTable = params.source;
-                activeTaskSource = sourceTable;
-
-                if (!taskId || !sourceTable) {
-                    showMessageBox('Error', 'No task ID or source table provided in URL.');
-                    return;
-                }
-
-                let taskData = [];
-                if (sourceTable === 'taskTable') {
-                    taskData = JSON.parse(localStorage.getItem('tasksData')) || [];
-                } else if (sourceTable === 'collectionsTaskTable') {
-                    taskData = JSON.parse(localStorage.getItem('collectionsTasksData')) || [];
-                } else if (sourceTable === 'escalationsTable') {
-                    taskData = JSON.parse(localStorage.getItem('escalatedTasks')) || [];
-                } else {
-                    showMessageBox('Error', 'Invalid source table provided.');
+                // Retrieve the saved task data from localStorage
+                const storedTask = localStorage.getItem('selectedTask');
+                const storedSource = localStorage.getItem('selectedTaskSource');
+                
+                if (!storedTask || !storedSource) {
+                    showMessageBox('Error', 'No task data found in local storage. Please navigate from the Tasks list.');
                     return;
                 }
                 
-                activeTask = taskData.find(task => task.taskId === taskId);
-
-                if (!activeTask) {
-                    showMessageBox('Error', `Task with ID ${taskId} not found.`);
-                    return;
-                }
-
+                activeTask = JSON.parse(storedTask);
+                activeTaskSource = storedSource;
+                
                 populateDetails(activeTask);
             }
 
@@ -1402,17 +1374,30 @@
                 taskDetailNotesContainer.innerHTML = notesHtml;
                 
                 // Right panel notes (shows last note)
-                const lastNote = notesMockData[notesMockData.length - 1];
-                taskDetailNotesPanelContainer.innerHTML = `
-                    <div class="task-detail-notes-entry">
-                        <div class="task-detail-notes-header">
-                            <div class="task-detail-notes-avatar">${lastNote.avatar}</div>
-                            <div class="task-detail-notes-author">${lastNote.author}</div>
-                            <div class="task-detail-notes-date">${lastNote.date}</div>
+                if (notesMockData.length > 0) {
+                    const lastNote = notesMockData[notesMockData.length - 1];
+                    taskDetailNotesPanelContainer.innerHTML = `
+                        <div class="task-detail-notes-entry">
+                            <div class="task-detail-notes-header">
+                                <div class="task-detail-notes-avatar">${lastNote.avatar}</div>
+                                <div class="task-detail-notes-author">${lastNote.author}</div>
+                                <div class="task-detail-notes-date">${lastNote.date}</div>
+                            </div>
+                            <div class="task-detail-notes-text">${lastNote.text}</div>
                         </div>
-                        <div class="task-detail-notes-text">${lastNote.text}</div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    taskDetailNotesPanelContainer.innerHTML = `
+                        <div class="task-detail-notes-entry">
+                            <div class="task-detail-notes-header">
+                                <div class="task-detail-notes-avatar">N/A</div>
+                                <div class="task-detail-notes-author">No Notes</div>
+                                <div class="task-detail-notes-date"></div>
+                            </div>
+                            <div class="task-detail-notes-text">No notes found for this task.</div>
+                        </div>
+                    `;
+                }
             }
 
             function populateActivity(task) {
@@ -1490,6 +1475,7 @@
             });
 
             document.querySelector('.resolve-btn').addEventListener('click', () => {
+                if (!activeTask) { showMessageBox('Error', 'No active task selected.'); return; }
                 if (activeTaskSource === 'collectionsTaskTable') {
                     openResolveCollectionsTasksModal();
                 } else if (activeTaskSource === 'escalationsTable') {
@@ -1500,14 +1486,17 @@
             });
 
             document.querySelector('.assign-btn').addEventListener('click', () => {
+                if (!activeTask) { showMessageBox('Error', 'No active task selected.'); return; }
                 showMessageBox('Action', `Assigning Task #${activeTask.taskId} to me.`);
             });
             
             document.querySelector('.follow-up-btn').addEventListener('click', () => {
+                if (!activeTask) { showMessageBox('Error', 'No active task selected.'); return; }
                 openFollowUpModal();
             });
 
             document.querySelector('.escalate-btn').addEventListener('click', () => {
+                if (!activeTask) { showMessageBox('Error', 'No active task selected.'); return; }
                 openEscalateTasksModal();
             });
             
@@ -1589,7 +1578,7 @@
                 `;
                 document.getElementById('collectionsTaskGrid').innerHTML = gridHtml;
                 resolveModalCollections.classList.remove('hidden');
-            });
+            }
             document.getElementById('closeResolveCollectionsTasksModalBtn').addEventListener('click', () => resolveModalCollections.classList.add('hidden'));
             document.getElementById('cancelResolveCollectionsTasksBtn').addEventListener('click', () => resolveModalCollections.classList.add('hidden'));
             document.getElementById('submitResolveCollectionsTasksBtn').addEventListener('click', () => {
@@ -1693,13 +1682,13 @@
                 let dataArray = [];
                 let storageKey = '';
                 
-                if (activeTaskSource === 'taskTable') {
+                if (activeTaskSource === 'tasksData') {
                     dataArray = JSON.parse(localStorage.getItem('tasksData')) || [];
                     storageKey = 'tasksData';
-                } else if (activeTaskSource === 'collectionsTaskTable') {
+                } else if (activeTaskSource === 'collectionsTasksData') {
                     dataArray = JSON.parse(localStorage.getItem('collectionsTasksData')) || [];
                     storageKey = 'collectionsTasksData';
-                } else if (activeTaskSource === 'escalationsTable') {
+                } else if (activeTaskSource === 'escalatedTasks') {
                     dataArray = JSON.parse(localStorage.getItem('escalatedTasks')) || [];
                     storageKey = 'escalatedTasks';
                 }
