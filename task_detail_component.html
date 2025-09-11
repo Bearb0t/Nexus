@@ -810,6 +810,10 @@
             <a href="collections_component.html" class="nav-icon" title="Collections Tasks">
                 &#x1F4B2; <!-- Heavy Dollar Sign icon for Collections -->
             </a>
+            <!-- New QC Link -->
+            <a href="qc_component.html" class="nav-icon" title="QC">
+                &#x2705; <!-- Check Mark icon for QC -->
+            </a>
             <a href="escalations_component.html" class="nav-icon" title="Escalations">
                 &#x26A1; <!-- Lightning bolt icon for Escalations -->
             </a>
@@ -1597,7 +1601,7 @@
                 `;
                 document.getElementById('collectionsTaskGrid').innerHTML = gridHtml;
                 resolveModalCollections.classList.remove('hidden');
-            }
+            });
             document.getElementById('closeResolveCollectionsTasksModalBtn').addEventListener('click', () => resolveModalCollections.classList.add('hidden'));
             document.getElementById('cancelResolveCollectionsTasksBtn').addEventListener('click', () => resolveModalCollections.classList.add('hidden'));
             document.getElementById('submitResolveCollectionsTasksBtn').addEventListener('click', () => {
