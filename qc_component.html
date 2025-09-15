@@ -650,12 +650,6 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="followUpNote">Note <span class="text-red-500">*</span></label>
-                <textarea id="followUpNote" rows="5" placeholder="Enter a note"></textarea>
-                <p class="text-right text-xs text-neutral-500 mt-1">0/4000</p>
-            </div>
-
             <h4 class="text-md font-semibold text-teal-700 mb-2 cursor-pointer" id="toggleTaskDetails">
                 &#x25BC; Task Details
             </h4>
@@ -1093,7 +1087,7 @@
             const initialTasksData = generateMockData(10);
             
             // Load tasks data from local storage, or use initial data if it doesn't exist
-            let tasksData = JSON.parse(localStorage.getItem('tasksData')) || [...initialTasksData];
+            let tasksData = JSON.parse(localStorage.getItem('qcTasksData')) || [...initialTasksData];
             
             let collectionsData = JSON.parse(localStorage.getItem('collectionsTasksData')) || [];
             let escalationsData = JSON.parse(localStorage.getItem('escalatedTasks')) || [];
@@ -1356,7 +1350,7 @@
             }
 
             function getSourceData(tableId) {
-                if (tableId === 'taskTable') return JSON.parse(localStorage.getItem('tasksData')) || tasksData;
+                if (tableId === 'taskTable') return JSON.parse(localStorage.getItem('qcTasksData')) || tasksData;
                 if (tableId === 'collectionsTaskTable') return JSON.parse(localStorage.getItem('collectionsTasksData')) || collectionsData;
                 if (tableId === 'escalationsTable') return JSON.parse(localStorage.getItem('escalatedTasks')) || escalationsData;
                 return [];
@@ -1426,7 +1420,7 @@
                         }
                     });
 
-                    localStorage.setItem('tasksData', JSON.stringify(tasksData));
+                    localStorage.setItem('qcTasksData', JSON.stringify(tasksData));
                     applyColumnPreferences();
                     showMessageBox('Success', `Submitting Follow Up for Tasks ${taskIds.join(', ')}:\nReason: ${reason}\nDate: ${date}\nNote: ${note}`);
                     if (followUpModal) {
@@ -1507,7 +1501,7 @@
                         }
                     });
 
-                    localStorage.setItem('tasksData', JSON.stringify(tasksData));
+                    localStorage.setItem('qcTasksData', JSON.stringify(tasksData));
                     applyColumnPreferences();
                     showMessageBox('Resolution Submitted', `Tasks ${taskIds.join(', ')} resolved!\nResolution Type: ${resolutionType}\nNote: ${note}`);
                     if (resolveModalStandard) {
@@ -1604,7 +1598,7 @@
                         }
                     });
                     
-                    localStorage.setItem('tasksData', JSON.stringify(tasksData));
+                    localStorage.setItem('qcTasksData', JSON.stringify(tasksData));
                     localStorage.setItem('escalatedTasks', JSON.stringify(escalationsData));
                     
                     applyColumnPreferences();
@@ -1823,7 +1817,7 @@
                 const ellipsisTh = document.createElement('th');
                 headerRow.appendChild(ellipsisTh);
 
-                const dataArray = JSON.parse(localStorage.getItem('tasksData')) || tasksData;
+                const dataArray = JSON.parse(localStorage.getItem('qcTasksData')) || tasksData;
 
                 dataArray.forEach(rowData => {
                     const row = document.createElement('tr');
@@ -1875,7 +1869,7 @@
             function saveTaskDataToStorage(taskId, sourceTable) {
                 let dataArray = [];
                 if (sourceTable === 'tasksData') {
-                    dataArray = JSON.parse(localStorage.getItem('tasksData')) || [];
+                    dataArray = JSON.parse(localStorage.getItem('qcTasksData')) || [];
                 } else if (sourceTable === 'collectionsTasksData') {
                     dataArray = JSON.parse(localStorage.getItem('collectionsTasksData')) || [];
                 } else if (sourceTable === 'escalatedTasks') {
@@ -2060,8 +2054,8 @@
             // This component is a single page, so a simple load suffices.
             if (document.getElementById('taskTable')) {
                 // If local storage is empty, initialize it with mock data
-                if (!localStorage.getItem('tasksData')) {
-                    localStorage.setItem('tasksData', JSON.stringify(initialTasksData));
+                if (!localStorage.getItem('qcTasksData')) {
+                    localStorage.setItem('qcTasksData', JSON.stringify(initialTasksData));
                 }
                 applyColumnPreferences();
             }
