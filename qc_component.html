@@ -497,7 +497,7 @@
             <a href="index.html" class="nav-icon" title="Home">
                 &#x2302; <!-- Home icon -->
             </a>
-            <a href="tasks_component.html" class="nav-icon active" title="Tasks">
+            <a href="tasks_component.html" class="nav-icon" title="Tasks">
                 &#x1F4CB; <!-- Clipboard icon for Tasks -->
             </a>
             <a href="search_component.html" class="nav-icon" title="Claim Search">
@@ -507,7 +507,7 @@
                 &#x1F4B2; <!-- Heavy Dollar Sign icon for Collections -->
             </a>
             <!-- New QC Link -->
-            <a href="qc_component.html" class="nav-icon" title="QC">
+            <a href="qc_component.html" class="nav-icon active" title="QC">
                 &#x2705; <!-- Check Mark icon for QC -->
             </a>
             <a href="escalations_component.html" class="nav-icon" title="Escalations">
@@ -1110,13 +1110,12 @@
 
             const sectionTitles = {
                 'home': 'Home',
-                'task-queues': 'Tasks',
-                'collections-tasks': 'Collections Tasks',
-                'escalations': 'Escalations',
-                'dashboards': 'Dashboards',
-                'search': 'Claim Search',
-                'admin': 'Admin',
-                'qc-tasks': 'QC',
+                'tasks_component': 'Tasks',
+                'collections_component': 'Collections Tasks',
+                'escalations_component': 'Escalations',
+                'search_component': 'Claim Search',
+                'admin_component': 'Admin',
+                'qc_component': 'QC',
             };
 
             function setActiveSection(targetId) {
@@ -2070,4 +2069,3 @@
     </script>
 </body>
 </html>
-
