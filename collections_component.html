@@ -1301,6 +1301,12 @@
             
             let collectionsTasksData = JSON.parse(localStorage.getItem('collectionsTasksData'));
             
+            // Function to get a random item from an array
+            function getRandomItem(arr, num) {
+                const shuffled = [...arr].sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, num);
+            }
+
             const initialCollectionsTasksData = [
                 { taskId: '10', name: 'Provider Contact', status: 'Active', followUpDate: '-', age: '-', claimId: '8', clientClaimNum: '-', lifecycle: 'Collections', client: clients[0], healthSystem: healthSystems[0], providerTaxId: '191388672', assignee: '-', overpayment: getRandomAmount(200, 20000), currentBalance: getRandomAmount(200, 20000), currentPriority: '4', createdOn: formatCreatedOnDate(getRandomDateWithinLastTwoMonths()), description: 'Attempted to contact provider regarding overpayment. No response yet.', reasonCode: 'No Contact', providerName: 'Provider 10', phoneNumber: '555-101-1010', address: '100 Main St, Anytown, USA 12345', npi: 'NPI10101010', parIndicator: 'P', isFlagged: false, attachments: [] },
                 { taskId: '11', name: 'Provider Contact', status: 'Escalated', followUpDate: '-', age: '-', claimId: '100', clientClaimNum: '-', lifecycle: 'Collections', client: clients[0], healthSystem: healthSystems[1], providerTaxId: '995631282', assignee: 'Steve Rogers', overpayment: getRandomAmount(200, 20000), currentBalance: getRandomAmount(200, 20000), currentPriority: '4', createdOn: formatCreatedOnDate(getRandomDateWithinLastTwoMonths()), description: 'Multiple attempts to contact provider failed. Escalating for further action.', reasonCode: 'Repeated No Contact', providerName: 'Provider 11', phoneNumber: '555-111-1111', address: '111 Main St, Anytown, USA 12345', npi: 'NPI11111111', parIndicator: 'P', isFlagged: false, attachments: [] },
@@ -1355,6 +1361,26 @@
 
             if (!collectionsTasksData || collectionsTasksData.length === 0) {
                 collectionsTasksData = [...initialCollectionsTasksData, ...newCollectionsTasks];
+
+                // Update tasks with new names
+                const tasksToUpdate = getRandomItem(collectionsTasksData, 8);
+                const callbackTasks = getRandomItem(tasksToUpdate, 3);
+                const blitzTasks = tasksToUpdate.filter(task => !callbackTasks.includes(task)).slice(0, 5);
+                
+                callbackTasks.forEach(task => {
+                    const taskIndex = collectionsTasksData.findIndex(t => t.taskId === task.taskId);
+                    if (taskIndex !== -1) {
+                        collectionsTasksData[taskIndex].name = 'Callback';
+                    }
+                });
+
+                blitzTasks.forEach(task => {
+                    const taskIndex = collectionsTasksData.findIndex(t => t.taskId === task.taskId);
+                    if (taskIndex !== -1) {
+                        collectionsTasksData[taskIndex].name = 'Blitz Contact';
+                    }
+                });
+
                 localStorage.setItem('collectionsTasksData', JSON.stringify(collectionsTasksData));
             }
 
