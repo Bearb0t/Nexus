@@ -405,90 +405,6 @@
             font-size: 18px;
             font-weight: bold;
         }
-        .resolve-tasks-modal-content {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            width: 90%;
-            max-width: 900px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .resolve-tasks-modal-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-            margin-top: 1rem;
-        }
-        .resolve-tasks-modal-table th, .resolve-tasks-modal-table td {
-            padding: 8px;
-            border: 1px solid #E2E8F0;
-            text-align: left;
-            white-space: nowrap;
-        }
-        .resolve-tasks-modal-table th {
-            background-color: #F7FAFC;
-            font-weight: 600;
-            color: #4A5568;
-        }
-        .resolve-tasks-modal-table tbody tr:nth-child(odd) {
-            background-color: #F9FAFB;
-        }
-        .resolve-grid-container {
-            display: grid;
-            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(50px, 0.5fr);
-            gap: 0.5rem;
-            align-items: center;
-        }
-        .resolve-grid-header {
-            font-weight: 600;
-            color: #4A5568;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #E2E8F0;
-            text-align: left;
-            display: grid;
-            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(50px, 0.5fr);
-            gap: 0.5rem;
-        }
-        .resolve-grid-header > div {
-            padding: 0.5rem 0.25rem;
-        }
-        .resolve-grid-row {
-            display: grid;
-            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(50px, 0.5fr);
-            gap: 0.5rem;
-            align-items: center;
-        }
-        .resolve-grid-row > div {
-            padding: 0.5rem 0.25rem;
-        }
-        .resolve-grid-row:nth-child(even) {
-            background-color: #F9FAFB;
-        }
-        .resolve-grid-row:hover {
-            background-color: #F0F4F8;
-        }
-        .resolve-grid-item {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 0.5rem;
-            font-size: 0.875rem;
-        }
-        .note-textarea {
-            min-height: 38px;
-            resize: vertical;
-        }
-        .nexus-logo-svg {
-            width: 60px;
-            height: auto;
-        }
-        .nexus-logo-text {
-            font-family: sans-serif;
-            font-size: 18px;
-            font-weight: bold;
-        }
         .hidden {
             display: none;
         }
@@ -529,6 +445,126 @@
         .modal-body-scroll {
             overflow-y: auto;
             max-height: 65vh;
+        }
+        /* Summary Card styles */
+        .summary-card-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 1.5rem;
+            padding-bottom: 1rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e0 #f7fafc;
+        }
+        .summary-card-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .summary-card-container::-webkit-scrollbar-track {
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+        .summary-card-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e0;
+            border-radius: 10px;
+            border: 2px solid #f7fafc;
+        }
+        .summary-card {
+            flex-shrink: 0;
+            width: 250px;
+            padding: 1.5rem;
+            background-color: #fff;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .summary-card.active-filter {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.4);
+        }
+        .summary-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4A5568;
+            margin-bottom: 0.25rem;
+        }
+        .summary-card p {
+            font-size: 0.875rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+        .summary-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2D3748;
+            margin-bottom: 0.5rem;
+        }
+        .summary-card .label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #718096;
+            margin-bottom: 0.25rem;
+        }
+        .summary-card .count-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2D3748;
+        }
+        /* New and fixed grid styles for modals */
+        .resolve-grid-container {
+            display: grid;
+            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(50px, 0.5fr);
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .resolve-grid-header {
+            font-weight: 600;
+            color: #4A5568;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #E2E8F0;
+            text-align: left;
+            display: grid;
+            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(50px, 0.5fr);
+            gap: 0.5rem;
+        }
+        .resolve-grid-header > div,
+        .resolve-grid-row > div {
+            padding: 0.5rem 0.25rem;
+        }
+        .resolve-grid-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+            max-height: 50vh; /* Adjust as needed */
+        }
+        .resolve-grid-row {
+            display: grid;
+            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(50px, 0.5fr);
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .resolve-grid-row:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .resolve-grid-row:hover {
+            background-color: #F0F4F8;
+        }
+        .resolve-grid-item {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .note-textarea {
+            min-height: 38px;
+            resize: vertical;
         }
     </style>
 </head>
@@ -600,6 +636,10 @@
 
         <div class="flex-grow p-4 overflow-y-auto">
             <section id="collections-tasks" class="content-section active">
+                <div class="summary-card-container mb-4" id="summaryCardContainer">
+                    <!-- Summary cards will be dynamically inserted here -->
+                </div>
+                
                 <div class="bg-white p-4 rounded-lg shadow-sm mb-4 flex items-center space-x-4 flex-shrink-0">
                     <span id="filterIconCollectionsTasks" class="text-2xl text-neutral-600 cursor-pointer">&#x25BC;</span>
                     <div class="relative flex-grow">
@@ -760,13 +800,13 @@
     
     <!-- New: Resolve Collections Tasks Modal -->
     <div id="resolveCollectionsTasksModal" class="modal-overlay hidden">
-        <div class="resolve-tasks-modal-content !max-w-screen-lg">
+        <div class="modal-content !max-w-screen-lg">
             <div class="modal-header">
                 <h3 class="text-xl font-semibold text-neutral-800">Resolve Collection Task(s)</h3>
                 <button class="text-gray-500 hover:text-gray-700 text-2xl" id="closeResolveCollectionsTasksModalBtn">&times;</button>
             </div>
-
-            <div class="flex flex-col gap-2 mb-4">
+            
+            <div id="resolveGridWrapper" class="flex flex-col gap-2 mb-4">
                 <div class="resolve-grid-header">
                     <div>Task ID</div>
                     <div>Contact Type</div>
@@ -775,9 +815,9 @@
                     <div>Note</div>
                     <div class="text-center">Flag</div>
                 </div>
-                <div class="resolve-grid-container resolve-grid-row border border-blue-400 bg-blue-50 rounded-md">
-                    <div class="font-bold text-blue-700 flex items-center">Apply to All</div>
-                    <div>
+                <div id="collectionsApplyToAllRow" class="resolve-grid-row border border-blue-400 bg-blue-50 rounded-md">
+                    <div class="font-bold text-blue-700 flex items-center p-2">Apply to All</div>
+                    <div class="p-2">
                         <select id="collectionsApplyToAllContactType" class="filter-input w-full !mb-0">
                             <option value="">Select contact type</option>
                             <option value="Email">Email</option>
@@ -788,7 +828,7 @@
                             <option value="Fax Sent">Fax Sent</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="p-2">
                         <select id="collectionsApplyToAllResolution" class="filter-input w-full !mb-0">
                             <option value="">Select resolution</option>
                             <option value="Provider Reviewing">Provider Reviewing</option>
@@ -797,22 +837,21 @@
                             <option value="Provider Appealing">Provider Appealing</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="p-2">
                         <select id="collectionsApplyToAllNoteTemplate" class="filter-input w-full !mb-0">
                             <option value="">Select a template</option>
                             <option value="Collections Template 1">Collections Template: Payment received</option>
                             <option value="Collections Template 2">Collections Template: Follow-up needed</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="p-2">
                         <textarea id="collectionsApplyToAllNoteTextarea" class="filter-input w-full !mb-0 note-textarea" rows="1" placeholder="Enter note"></textarea>
                     </div>
-                    <div class="flex items-center justify-center">
+                    <div class="flex items-center justify-center p-2">
                         <input type="checkbox" id="collectionsApplyToAllFlag" title="Flag all selected tasks">
                     </div>
                 </div>
-                <div id="collectionsTasksGridBody" class="flex flex-col gap-2 mt-4">
-                </div>
+                <div id="collectionsTasksGridBody" class="resolve-grid-body"></div>
             </div>
 
             <div class="mt-4">
@@ -843,7 +882,7 @@
                 &#x25BC; Task Details
             </h4>
             <div id="resolveCollectionsModalTaskDetailsContent" class="overflow-x-auto hidden">
-                <table class="resolve-tasks-modal-table">
+                <table class="task-details-modal-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -880,13 +919,13 @@
     
     <!-- New: Update Collections Tasks Modal -->
     <div id="updateCollectionsTasksModal" class="modal-overlay hidden">
-        <div class="resolve-tasks-modal-content !max-w-screen-lg">
+        <div class="modal-content !max-w-screen-lg">
             <div class="modal-header">
                 <h3 class="text-xl font-semibold text-neutral-800">Update Collection Task(s)</h3>
                 <button class="text-gray-500 hover:text-gray-700 text-2xl" id="closeUpdateCollectionsTasksModalBtn">&times;</button>
             </div>
 
-            <div class="flex flex-col gap-2 mb-4">
+            <div id="updateGridWrapper" class="flex flex-col gap-2 mb-4">
                 <div class="resolve-grid-header">
                     <div>Task ID</div>
                     <div>Contact Type</div>
@@ -895,9 +934,9 @@
                     <div>Note</div>
                     <div class="text-center">Flag</div>
                 </div>
-                <div class="resolve-grid-container resolve-grid-row border border-blue-400 bg-blue-50 rounded-md">
-                    <div class="font-bold text-blue-700 flex items-center">Apply to All</div>
-                    <div>
+                <div class="resolve-grid-row border border-blue-400 bg-blue-50 rounded-md">
+                    <div class="font-bold text-blue-700 flex items-center p-2">Apply to All</div>
+                    <div class="p-2">
                         <select id="updateApplyToAllContactType" class="filter-input w-full !mb-0">
                             <option value="">Select contact type</option>
                             <option value="Email">Email</option>
@@ -908,7 +947,7 @@
                             <option value="Fax Sent">Fax Sent</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="p-2">
                         <select id="updateApplyToAllResolution" class="filter-input w-full !mb-0">
                             <option value="">Select update type</option>
                             <option value="Provider Reviewing">Provider Reviewing</option>
@@ -917,29 +956,28 @@
                             <option value="Provider Appealing">Provider Appealing</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="p-2">
                         <select id="updateApplyToAllNoteTemplate" class="filter-input w-full !mb-0">
                             <option value="">Select a template</option>
                             <option value="Collections Template 1">Collections Template: Payment received</option>
                             <option value="Collections Template 2">Collections Template: Follow-up needed</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="p-2">
                         <textarea id="updateApplyToAllNoteTextarea" class="filter-input w-full !mb-0 note-textarea" rows="1" placeholder="Enter note"></textarea>
                     </div>
-                    <div class="flex items-center justify-center">
+                    <div class="flex items-center justify-center p-2">
                         <input type="checkbox" id="updateApplyToAllFlag" title="Flag all selected tasks">
                     </div>
                 </div>
-                <div id="updateCollectionsTasksGridBody" class="flex flex-col gap-2 mt-4">
-                </div>
+                <div id="updateCollectionsTasksGridBody" class="resolve-grid-body"></div>
             </div>
 
             <h4 class="text-md font-semibold text-teal-700 mb-2 cursor-pointer" id="toggleUpdateCollectionsTaskDetails">
                 &#x25BC; Task Details
             </h4>
             <div id="updateCollectionsModalTaskDetailsContent" class="overflow-x-auto hidden">
-                <table class="resolve-tasks-modal-table">
+                <table class="task-details-modal-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -1014,7 +1052,7 @@
                 &#x25BC; Task Details
             </h4>
             <div id="escalateModalTaskDetailsContent" class="overflow-x-auto hidden">
-                <table class="resolve-tasks-modal-table">
+                <table class="task-details-modal-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -1598,7 +1636,6 @@
                                 <td>${task.client || '-'}</td>
                                 <td>${task.healthSystem || '-'}</td>
                                 <td>${task.providerTaxId || '-'}</td>
-                                <td>${task.assignee || '-'}</td>
                                 <td>$${parseFloat(task.overpayment || 0).toFixed(2)}</td>
                                 <td>$${parseFloat(task.currentBalance || 0).toFixed(2)}</td>
                                 <td>${task.currentPriority || '-'}</td>
@@ -1705,7 +1742,7 @@
                     
                     // Save the updated tasks list to localStorage
                     localStorage.setItem('collectionsTasksData', JSON.stringify(collectionsTasksData));
-                    applyColumnPreferences();
+                    applyColumnPreferences(currentFilteredData);
                     
                     showMessageBox('Success', `Submitting Follow Up for Tasks ${taskIdsToUpdate.join(', ')}:\nReason: ${reason}\nDate: ${date}\nNote: ${note}`);
                     followUpModal.classList.add('hidden');
@@ -1748,11 +1785,11 @@
                     selectedTasksData.push(getTaskDataFromRow(row));
                     selectedTaskIds.push(row.dataset.taskId);
                 }
-
+                
                 collectionsTasksGridBody.innerHTML = '';
                 selectedTasksData.forEach(task => {
                     const taskRow = document.createElement('div');
-                    taskRow.classList.add('resolve-grid-row', 'bg-white', 'rounded-md', 'shadow-sm', 'p-2');
+                    taskRow.classList.add('resolve-grid-row', 'bg-white', 'rounded-md', 'shadow-sm');
                     taskRow.dataset.taskId = task.taskId;
                     taskRow.innerHTML = `
                         <div class="resolve-grid-item font-semibold text-neutral-700">${task.taskId || '-'}</div>
@@ -1797,6 +1834,35 @@
                     textarea.addEventListener('input', autoResize);
                 });
 
+                // Add event listeners to the "Apply to All" controls
+                collectionsApplyToAllContactType.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    document.querySelectorAll('#collectionsTasksGridBody select[id^="contactType-"]').forEach(select => {
+                        select.value = value;
+                    });
+                });
+                collectionsApplyToAllResolution.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    document.querySelectorAll('#collectionsTasksGridBody select[id^="resolution-"]').forEach(select => {
+                        select.value = value;
+                    });
+                });
+                collectionsApplyToAllNoteTemplate.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    const noteText = value ? `Note from template: ${value}` : '';
+                    document.querySelectorAll('#collectionsTasksGridBody textarea[id^="note-"]').forEach(textarea => {
+                        textarea.value = noteText;
+                        autoResize.call(textarea);
+                    });
+                });
+                collectionsApplyToAllNoteTextarea.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    document.querySelectorAll('#collectionsTasksGridBody textarea[id^="note-"]').forEach(textarea => {
+                        textarea.value = value;
+                        autoResize.call(textarea);
+                    });
+                });
+
                 const collectionsApplyToAllFlag = document.getElementById('collectionsApplyToAllFlag');
                 if (collectionsApplyToAllFlag) {
                     collectionsApplyToAllFlag.addEventListener('change', (e) => {
@@ -1823,7 +1889,6 @@
                             <td>${task.client || '-'}</td>
                             <td>${task.healthSystem || '-'}</td>
                             <td>${task.providerTaxId || '-'}</td>
-                            <td>${task.assignee || '-'}</td>
                             <td>$${parseFloat(task.overpayment || 0).toFixed(2)}</td>
                             <td>$${parseFloat(task.currentBalance || 0).toFixed(2)}</td>
                             <td>${task.currentPriority || '-'}</td>
@@ -1860,7 +1925,7 @@
                 updateCollectionsTasksGridBody.innerHTML = '';
                 selectedTasksData.forEach(task => {
                     const taskRow = document.createElement('div');
-                    taskRow.classList.add('resolve-grid-row', 'bg-white', 'rounded-md', 'shadow-sm', 'p-2');
+                    taskRow.classList.add('resolve-grid-row', 'bg-white', 'rounded-md', 'shadow-sm');
                     taskRow.dataset.taskId = task.taskId;
                     taskRow.innerHTML = `
                         <div class="resolve-grid-item font-semibold text-neutral-700">${task.taskId || '-'}</div>
@@ -1959,7 +2024,6 @@
                             <td>${task.client || '-'}</td>
                             <td>${task.healthSystem || '-'}</td>
                             <td>${task.providerTaxId || '-'}</td>
-                            <td>${task.assignee || '-'}</td>
                             <td>$${parseFloat(task.overpayment || 0).toFixed(2)}</td>
                             <td>$${parseFloat(task.currentBalance || 0).toFixed(2)}</td>
                             <td>${task.currentPriority || '-'}</td>
@@ -2043,7 +2107,7 @@
                     
                     showMessageBox('Resolution Submitted', summaryMessage);
                     
-                    applyColumnPreferences();
+                    applyColumnPreferences(currentFilteredData);
                     resolveCollectionsTasksModal.classList.add('hidden');
                 });
             }
@@ -2106,7 +2170,7 @@
                     
                     showMessageBox('Update Submitted', summaryMessage);
                     
-                    applyColumnPreferences();
+                    applyColumnPreferences(currentFilteredData);
                     updateCollectionsTasksModal.classList.add('hidden');
                 });
             }
@@ -2172,8 +2236,6 @@
                             <td>${task.isFlagged ? '&#x1F6A9;' : '-'}</td>
                             <td>${task.client || '-'}</td>
                             <td>${task.healthSystem || '-'}</td>
-                            <td>${task.providerTaxId || '-'}</td>
-                            <td>${task.assignee || '-'}</td>
                             <td>$${parseFloat(task.overpayment || 0).toFixed(2)}</td>
                             <td>$${parseFloat(task.currentBalance || 0).toFixed(2)}</td>
                             <td>${task.currentPriority || '-'}</td>
@@ -2238,7 +2300,7 @@
                     
                     showMessageBox('Escalation Submitted', `Tasks ${originalTaskIds.join(', ')} escalated! The escalation tasks will appear on the Escalations page.`);
                     
-                    applyColumnPreferences();
+                    applyColumnPreferences(currentFilteredData);
                     escalateTasksModal.classList.add('hidden');
                     escalationReasonSelect.value = '';
                     escalateNoteTemplateSelect.value = '';
@@ -2278,7 +2340,7 @@
             if (submitColumnPreferencesBtn) {
                 submitColumnPreferencesBtn.addEventListener('click', () => {
                     localStorage.setItem('collectionsDisplayedColumns', JSON.stringify(currentDisplayedColumns));
-                    applyColumnPreferences();
+                    applyColumnPreferences(currentFilteredData);
                     columnPreferencesModal.classList.add('hidden');
                     showMessageBox('Column Preferences Saved', 'Your column display preferences have been updated.');
                 });
@@ -2337,404 +2399,498 @@
             }
             
             if (moveToDisplayedBtn) {
-                moveToDisplayedBtn.addEventListener('click', () => {
-                    const selectedCheckboxes = availableColumnsList.querySelectorAll('input[type="checkbox"]:checked');
-                    selectedCheckboxes.forEach(checkbox => {
-                        const columnKey = checkbox.dataset.columnKey;
-                        const colIndex = currentAvailableColumns.findIndex(col => col.key === columnKey);
-                        if (colIndex > -1) {
-                            const [movedCol] = currentAvailableColumns.splice(colIndex, 1);
-                            movedCol.show = true;
-                            currentDisplayedColumns.push(movedCol);
-                        }
-                    });
-                    currentDisplayedColumns.sort((a, b) => {
-                        const allColumnKeys = allColumns.map(c => c.key);
-                        return allColumnKeys.indexOf(a.key) - allColumnKeys.indexOf(b.key);
-                    });
+        moveToDisplayedBtn.addEventListener('click', () => {
+            const selectedCheckboxes = availableColumnsList.querySelectorAll('input[type="checkbox"]:checked');
+            selectedCheckboxes.forEach(checkbox => {
+                const columnKey = checkbox.dataset.columnKey;
+                const colIndex = currentAvailableColumns.findIndex(col => col.key === columnKey);
+                if (colIndex > -1) {
+                    const [movedCol] = currentAvailableColumns.splice(colIndex, 1);
+                    movedCol.show = true;
+                    currentDisplayedColumns.push(movedCol);
+                }
+            });
+            currentDisplayedColumns.sort((a, b) => {
+                const allColumnKeys = allColumns.map(c => c.key);
+                return allColumnKeys.indexOf(a.key) - allColumnKeys.indexOf(b.key);
+            });
+            renderColumnLists();
+        });
+    }
+    
+    if (moveUpBtn) {
+        moveUpBtn.addEventListener('click', () => {
+            const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
+            if (selectedCheckboxes.length === 1) {
+                const columnKey = selectedCheckboxes[0].dataset.columnKey;
+                const index = currentDisplayedColumns.findIndex(col => col.key === columnKey);
+                if (index > 0) {
+                    [currentDisplayedColumns[index], currentDisplayedColumns[index - 1]] = [currentDisplayedColumns[index - 1], currentDisplayedColumns[index]];
                     renderColumnLists();
+                    displayedColumnsList.querySelector(`input[data-column-key="${columnKey}"]`).checked = true;
+                }
+            } else {
+                showMessageBox('Selection Required', 'Please select exactly one column to move up.');
+            }
+        });
+    }
+
+    if (moveDownBtn) {
+        moveDownBtn.addEventListener('click', () => {
+            const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
+            if (selectedCheckboxes.length === 1) {
+                const columnKey = selectedCheckboxes[0].dataset.columnKey;
+                const index = currentDisplayedColumns.findIndex(col => col.key === columnKey);
+                if (index < currentDisplayedColumns.length - 1) {
+                    [currentDisplayedColumns[index], currentDisplayedColumns[index + 1]] = [currentDisplayedColumns[index + 1], currentDisplayedColumns[index]];
+                    renderColumnLists();
+                    displayedColumnsList.querySelector(`input[data-column-key="${columnKey}"]`).checked = true;
+                }
+            } else {
+                showMessageBox('Selection Required', 'Please select exactly one column to move down.');
+            }
+        });
+    }
+
+    function calculateAge(createdOnDate) {
+        const now = new Date();
+        const created = new Date(createdOnDate);
+        const diffTime = Math.abs(now - created);
+        return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    let currentFilteredData = collectionsTasksData;
+    let activeFilter = null;
+
+    function applyColumnPreferences(dataToDisplay = collectionsTasksData) {
+        const updateTable = (table, dataArray, sourceTable) => {
+            if (!table) return;
+
+            const columnsToDisplayForTable = currentDisplayedColumns;
+            const headerRow = table.querySelector('thead tr');
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            headerRow.innerHTML = '<th><input type="checkbox" title="Select all tasks"></th>';
+            columnsToDisplayForTable.forEach(colPref => {
+                const colName = colPref.display;
+                const newTh = document.createElement('th');
+                newTh.dataset.columnName = colName;
+                newTh.textContent = colName;
+                if (colName === 'ID' || colName === 'Claim ID') newTh.innerHTML += ' <span class="text-xs">&#x25B2;</span>';
+                headerRow.appendChild(newTh);
+            });
+            const ellipsisTh = document.createElement('th');
+            headerRow.appendChild(ellipsisTh);
+
+            dataArray.forEach(rowData => {
+                const row = document.createElement('tr');
+                rowData.age = calculateAge(rowData.createdOn);
+
+                for (const key in rowData) {
+                    row.dataset[key] = rowData[key];
+                }
+                row.dataset.taskId = rowData.taskId;
+
+                let rowHtml = `<td><input type="checkbox" class="task-checkbox" title="Select task"></td>`;
+                columnsToDisplayForTable.forEach(colPref => {
+                    const colKey = colPref.key;
+                    let cellContent = rowData[colKey] || '-';
+
+                    if (colKey === 'overpayment' || colKey === 'currentBalance') {
+                        cellContent = `$${parseFloat(cellContent).toFixed(2)}`;
+                    } else if (colKey === 'status') {
+                        const statusClass = String(cellContent).toLowerCase().replace(' ', '');
+                        cellContent = `<span class="status-badge status-${statusClass}">${cellContent}</span>`;
+                    } else if (colKey === 'isFlagged') {
+                        cellContent = rowData[colKey] ? '&#x1F6A9;' : '-';
+                    } else if (colKey === 'createdOn' || colKey === 'creationDate') {
+                        if (String(cellContent).includes('AM') || String(cellContent).includes('PM')) {
+                            const parts = String(cellContent).split(' ');
+                            if (parts.length >= 3) {
+                                cellContent = `${parts[0]} ${parts[1].replace(',', '')}, ${parts[2]}<br>${parts.slice(3).join(' ')}`;
+                            }
+                        }
+                    }
+
+                    if (colPref.isLink && colKey === 'taskId') {
+                        const idToUse = rowData.taskId;
+                        rowHtml += `<td><a href="task_detail_component.html?id=${idToUse}&source=${sourceTable}" class="task-id-link" onclick="saveTaskDataToStorage('${idToUse}', '${sourceTable}')">${cellContent}</a></td>`;
+                    } else {
+                        rowHtml += `<td>${cellContent}</td>`;
+                    }
                 });
+                rowHtml += `<td><span class="ellipsis-icon" data-task-row-id="${rowData.taskId}">&#x22EF;</span></td>`;
+                row.innerHTML = rowHtml;
+                tbody.appendChild(row);
+            });
+        };
+        
+        updateTable(collectionsTaskTable, dataToDisplay, 'collectionsTaskTable');
+        ellipsisIcons = document.querySelectorAll('.table-custom .ellipsis-icon');
+        addEllipsisListeners();
+    }
+
+    function generateSummaryCards() {
+        const cardContainer = document.getElementById('summaryCardContainer');
+        cardContainer.innerHTML = '';
+        
+        const summaryData = {};
+        
+        collectionsTasksData.forEach(task => {
+            const key = `${task.client}|${task.healthSystem}`;
+            if (!summaryData[key]) {
+                summaryData[key] = {
+                    client: task.client,
+                    healthSystem: task.healthSystem,
+                    totalBalance: 0,
+                    priorityTasks: 0,
+                    totalTasks: 0
+                };
             }
             
-            if (moveUpBtn) {
-                moveUpBtn.addEventListener('click', () => {
-                    const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
-                    if (selectedCheckboxes.length === 1) {
-                        const columnKey = selectedCheckboxes[0].dataset.columnKey;
-                        const index = currentDisplayedColumns.findIndex(col => col.key === columnKey);
-                        if (index > 0) {
-                            [currentDisplayedColumns[index], currentDisplayedColumns[index - 1]] = [currentDisplayedColumns[index - 1], currentDisplayedColumns[index]];
-                            renderColumnLists();
-                            displayedColumnsList.querySelector(`input[data-column-key="${columnKey}"]`).checked = true;
-                        }
-                    } else {
-                        showMessageBox('Selection Required', 'Please select exactly one column to move up.');
-                    }
-                });
+            summaryData[key].totalBalance += parseFloat(task.currentBalance);
+            summaryData[key].totalTasks++;
+            
+            if (task.name === 'Callback' || task.name === 'Blitz Contact') {
+                summaryData[key].priorityTasks++;
+            }
+        });
+        
+        for (const key in summaryData) {
+            const card = document.createElement('div');
+            card.classList.add('summary-card', 'rounded-xl', 'p-6', 'shadow-md', 'border', 'border-gray-200', 'hover:shadow-lg', 'transition-all', 'duration-200');
+            card.dataset.client = summaryData[key].client;
+            card.dataset.healthSystem = summaryData[key].healthSystem;
+            
+            if (activeFilter && activeFilter.client === summaryData[key].client && activeFilter.healthSystem === summaryData[key].healthSystem) {
+                card.classList.add('active-filter');
             }
 
-            if (moveDownBtn) {
-                moveDownBtn.addEventListener('click', () => {
-                    const selectedCheckboxes = displayedColumnsList.querySelectorAll('input[type="checkbox"]:checked');
-                    if (selectedCheckboxes.length === 1) {
-                        const columnKey = selectedCheckboxes[0].dataset.columnKey;
-                        const index = currentDisplayedColumns.findIndex(col => col.key === columnKey);
-                        if (index < currentDisplayedColumns.length - 1) {
-                            [currentDisplayedColumns[index], currentDisplayedColumns[index + 1]] = [currentDisplayedColumns[index + 1], currentDisplayedColumns[index]];
-                            renderColumnLists();
-                            displayedColumnsList.querySelector(`input[data-column-key="${columnKey}"]`).checked = true;
-                        }
-                    } else {
-                        showMessageBox('Selection Required', 'Please select exactly one column to move down.');
-                    }
-                });
-            }
+            const formattedBalance = `$${(summaryData[key].totalBalance / 1000).toFixed(1)}K`;
 
-            function calculateAge(createdOnDate) {
-                const now = new Date();
-                const created = new Date(createdOnDate);
-                const diffTime = Math.abs(now - created);
-                return Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            }
-
-            function applyColumnPreferences() {
-                const updateTable = (table, dataArray, sourceTable) => {
-                    if (!table) return;
-
-                    const columnsToDisplayForTable = currentDisplayedColumns;
-
-                    const headerRow = table.querySelector('thead tr');
-                    const tbody = table.querySelector('tbody');
-                    tbody.innerHTML = '';
-
-                    headerRow.innerHTML = '<th><input type="checkbox" title="Select all tasks"></th>';
-                    columnsToDisplayForTable.forEach(colPref => {
-                        const colName = colPref.display;
-                        const newTh = document.createElement('th');
-                        newTh.dataset.columnName = colName;
-                        newTh.textContent = colName;
-                        if (colName === 'ID' || colName === 'Claim ID') newTh.innerHTML += ' <span class="text-xs">&#x25B2;</span>';
-                        headerRow.appendChild(newTh);
-                    });
-                    const ellipsisTh = document.createElement('th');
-                    headerRow.appendChild(ellipsisTh);
-
-                    dataArray.forEach(rowData => {
-                        const row = document.createElement('tr');
-                        // Update age on the fly
-                        rowData.age = calculateAge(rowData.createdOn);
-
-                        for (const key in rowData) {
-                            row.dataset[key] = rowData[key];
-                        }
-                        row.dataset.taskId = rowData.taskId;
-
-                        let rowHtml = `<td><input type="checkbox" class="task-checkbox" title="Select task"></td>`;
-                        columnsToDisplayForTable.forEach(colPref => {
-                            const colKey = colPref.key;
-                            let cellContent = rowData[colKey] || '-';
-
-                            if (colKey === 'overpayment' || colKey === 'currentBalance') {
-                                cellContent = `$${parseFloat(cellContent).toFixed(2)}`;
-                            } else if (colKey === 'status') {
-                                const statusClass = String(cellContent).toLowerCase().replace(' ', '');
-                                cellContent = `<span class="status-badge status-${statusClass}">${cellContent}</span>`;
-                            } else if (colKey === 'isFlagged') {
-                                cellContent = rowData[colKey] ? '&#x1F6A9;' : '-';
-                            } else if (colKey === 'createdOn' || colKey === 'creationDate') {
-                                if (String(cellContent).includes('AM') || String(cellContent).includes('PM')) {
-                                    const parts = String(cellContent).split(' ');
-                                    if (parts.length >= 3) {
-                                        cellContent = `${parts[0]} ${parts[1].replace(',', '')}, ${parts[2]}<br>${parts.slice(3).join(' ')}`;
-                                    }
-                                }
-                            }
-
-                            if (colPref.isLink && colKey === 'taskId') {
-                                const idToUse = rowData.taskId;
-                                rowHtml += `<td><a href="task_detail_component.html?id=${idToUse}&source=${sourceTable}" class="task-id-link" onclick="saveTaskDataToStorage('${idToUse}', '${sourceTable}')">${cellContent}</a></td>`;
-                            } else {
-                                rowHtml += `<td>${cellContent}</td>`;
-                            }
-                        });
-                        rowHtml += `<td><span class="ellipsis-icon" data-task-row-id="${rowData.taskId}">&#x22EF;</span></td>`;
-                        row.innerHTML = rowHtml;
-                        tbody.appendChild(row);
-                    });
-                };
-                
-                updateTable(collectionsTaskTable, collectionsTasksData, 'collectionsTaskTable');
-                ellipsisIcons = document.querySelectorAll('.table-custom .ellipsis-icon');
-                addEllipsisListeners();
-            }
-
-            document.getElementById('addNewPreferenceBtn').addEventListener('click', () => {
-                showMessageBox('Feature Coming Soon', 'Saving new column preferences is a feature currently under development!');
+            card.innerHTML = `
+                <div class="flex flex-col items-center text-center">
+                    <h4 class="font-semibold text-lg text-gray-800">${summaryData[key].client}</h4>
+                    <p class="text-gray-600 mb-4">${summaryData[key].healthSystem}</p>
+                    <div class="mb-2">
+                        <div class="text-3xl font-bold text-teal-600">${formattedBalance}</div>
+                        <span class="text-sm text-gray-500">Overpayment Balance</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-xl font-bold text-red-500">${summaryData[key].priorityTasks}</span>
+                        <span class="text-sm text-gray-500">Priority Tasks</span>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold text-gray-700">${summaryData[key].totalTasks}</span>
+                        <span class="text-sm text-gray-500">Total Tasks</span>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                if (card.classList.contains('active-filter')) {
+                    // Clicking the active filter removes it
+                    activeFilter = null;
+                } else {
+                    activeFilter = { client: card.dataset.client, healthSystem: card.dataset.healthSystem };
+                }
+                updateFilterAndGrid();
             });
             
-            // Function to save task data to local storage when a link is clicked
-            window.saveTaskDataToStorage = function(taskId, sourceTable) {
-                let dataArray = [];
-                if (sourceTable === 'collectionsTaskTable') {
-                    dataArray = JSON.parse(localStorage.getItem('collectionsTasksData')) || [];
-                }
-                const taskData = dataArray.find(task => task.taskId === taskId);
-                if (taskData) {
-                    localStorage.setItem('selectedTask', JSON.stringify(taskData));
-                    localStorage.setItem('selectedTaskSource', sourceTable);
-                }
+            cardContainer.appendChild(card);
+        }
+    }
+
+    function updateFilterAndGrid() {
+        const summaryCards = document.querySelectorAll('.summary-card');
+        summaryCards.forEach(card => card.classList.remove('active-filter'));
+
+        if (activeFilter) {
+            currentFilteredData = collectionsTasksData.filter(task =>
+                task.client === activeFilter.client && task.healthSystem === activeFilter.healthSystem
+            );
+            const activeCard = document.querySelector(`.summary-card[data-client="${activeFilter.client}"][data-health-system="${activeFilter.healthSystem}"]`);
+            if (activeCard) {
+                activeCard.classList.add('active-filter');
             }
-            
-            function addTaskIdLinkListeners() {
-                document.querySelectorAll('.task-id-link').forEach(link => {
-                    link.addEventListener('click', (event) => {
-                        const taskId = event.target.dataset.taskId;
-                        const sourceTable = event.target.closest('table').id;
-                        saveTaskDataToStorage(taskId, sourceTable);
-                    });
-                });
-            }
-            
-            const filterableFields = [
-                { key: 'status', display: 'Status', type: 'select', options: ['Active', 'Completed', 'Escalated', 'Follow Up', 'Paused'] },
-                { key: 'client', display: 'Client', type: 'select', options: ['ShadyInsurance', 'NotOKInsurance', 'WalkItOffIns'] },
-                { key: 'healthSystem', display: 'Health System', type: 'select', options: healthSystems },
-                { key: 'overpayment', display: 'Overpayment Amount', type: 'select', options: ['Under 1000', '1000-5000', 'Over 5000'] },
-                { key: 'assignee', display: 'Assignee', type: 'select', options: ['Clark Kent', 'Steve Rogers', 'Natasha Romanoff', 'Unassigned'] },
-                { key: 'age', display: 'Age (days)', type: 'input' },
-                { key: 'lifecycle', display: 'Lifecycle', type: 'select', options: ['Collections'] }
-            ];
+        } else {
+            currentFilteredData = collectionsTasksData;
+        }
 
-            let filterCriteria = [];
+        applyColumnPreferences(currentFilteredData);
+    }
 
-            function renderFilterCriteria() {
-                filterCriteriaContainer.innerHTML = '';
-                filterCriteria.forEach((criterion, index) => {
-                    const criterionDiv = document.createElement('div');
-                    criterionDiv.classList.add('filter-criterion-row', 'flex', 'items-center', 'gap-2', 'mb-2');
-                    criterionDiv.innerHTML = `
-                        <div class="form-group !mb-0 flex-grow">
-                            <label for="filterField${index}" class="block text-xs font-medium text-neutral-700 mb-1">Filter ${index + 1} <span class="text-red-500">*</span></label>
-                            <select id="filterField${index}" class="filter-input w-full !mb-0" data-index="${index}" data-type="field">
-                                <option value="">Select Field</option>
-                                ${filterableFields.map(field => `<option value="${field.key}" ${criterion.field === field.key ? 'selected' : ''}>${field.display}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group !mb-0 flex-grow">
-                            <label for="filterValue${index}" class="block text-xs font-medium text-neutral-700 mb-1">Value <span class="text-red-500">*</span></label>
-                            ${getFilterValueInputHtml(criterion.field, criterion.value, index)}
-                        </div>
-                        <button class="remove-filter-btn" data-index="${index}">-</button>
-                        ${index === filterCriteria.length - 1 ? '<button class="add-filter-btn">+</button>' : ''}
-                    `;
-                    filterCriteriaContainer.appendChild(criterionDiv);
-                });
+    generateSummaryCards();
+    updateFilterAndGrid();
 
-                filterCriteriaContainer.querySelectorAll('select[data-type="field"]').forEach(select => {
-                    select.addEventListener('change', handleFilterFieldChange);
-                });
-                filterCriteriaContainer.querySelectorAll('.remove-filter-btn').forEach(button => {
-                    button.addEventListener('click', handleRemoveFilterCriterion);
-                });
-                const lastAddButton = filterCriteriaContainer.querySelector('.add-filter-btn');
-                if (lastAddButton) {
-                    lastAddButton.addEventListener('click', addFilterCriterion);
-                }
-                filterCriteriaContainer.querySelectorAll('input[data-type="value"], select[data-type="value"]').forEach(input => {
-                    input.addEventListener('change', handleFilterValueChange);
-                    input.addEventListener('input', handleFilterValueChange);
-                });
-            }
-
-            function getFilterValueInputHtml(fieldKey, currentValue, index) {
-                const field = filterableFields.find(f => f.key === fieldKey);
-                if (!field) {
-                    return `<input type="text" id="filterValue${index}" class="filter-input w-full !mb-0" data-index="${index}" data-type="value" value="${currentValue || ''}" placeholder="Enter value">`;
-                }
-                if (field.type === 'select') {
-                    return `
-                        <select id="filterValue${index}" class="filter-input w-full !mb-0" data-index="${index}" data-type="value">
-                            <option value="">Select Value</option>
-                            ${field.options.map(option => `<option value="${option}" ${currentValue === option ? 'selected' : ''}>${option}</option>`).join('')}
-                        </select>
-                    `;
-                } else if (field.type === 'input') {
-                    return `<input type="text" id="filterValue${index}" class="filter-input w-full !mb-0" data-index="${index}" data-type="value" value="${currentValue || ''}" placeholder="Enter value">`;
-                }
-                return '';
-            }
-
-            function addFilterCriterion() {
-                filterCriteria.push({ field: '', value: '' });
-                renderFilterCriteria();
-            }
-
-            function handleRemoveFilterCriterion(event) {
-                const index = parseInt(event.target.dataset.index);
-                filterCriteria.splice(index, 1);
-                renderFilterCriteria();
-            }
-
-            function handleFilterFieldChange(event) {
-                const index = parseInt(event.target.dataset.index);
-                filterCriteria[index].field = event.target.value;
-                filterCriteria[index].value = '';
-                renderFilterCriteria();
-            }
-
-            function handleFilterValueChange(event) {
-                const index = parseInt(event.target.dataset.index);
-                filterCriteria[index].value = event.target.value;
-            }
-
-            function openFilterModal() {
-                filterCriteria = [{ field: '', value: '' }];
-                renderFilterCriteria();
-                if (filterModal) {
-                    filterModal.classList.remove('hidden');
-                }
-            }
-
-            function closeFilterModal() {
-                if (filterModal) {
-                    filterModal.classList.add('hidden');
-                }
-            }
-
-            function submitFilter() {
-                const filterSetName = filterSetNameInput.value.trim();
-                if (!filterSetName) {
-                    showMessageBox('Input Required', 'Please enter a name for the filter set.');
-                    return;
-                }
-
-                let allCriteriaValid = true;
-                filterCriteria.forEach((criterion) => {
-                    if (!criterion.field || !criterion.value) {
-                        allCriteriaValid = false;
-                    }
-                });
-
-                if (!allCriteriaValid) {
-                    showMessageBox('Input Required', 'Please ensure all filter fields and values are selected/entered.');
-                    return;
-                }
-
-                let filterSummary = `Filter Set Name: ${filterSetName}\n`;
-                filterSummary += `Set as Default: ${setAsDefaultCheckbox.checked ? 'Yes' : 'No'}\n\n`;
-                filterSummary += 'Applied Filters:\n';
-                filterCriteria.forEach(criterion => {
-                    const fieldDisplay = filterableFields.find(f => f.key === criterion.field)?.display || criterion.field;
-                    filterSummary += `- ${fieldDisplay}: ${criterion.value}\n`;
-                });
-
-                showMessageBox('Filter Applied', filterSummary);
-                closeFilterModal();
-            }
-
-            if (filterIconCollectionsTasks) {
-                filterIconCollectionsTasks.addEventListener('click', openFilterModal);
-            }
-
-            if (closeFilterModalBtn) {
-                closeFilterModalBtn.addEventListener('click', closeFilterModal);
-            }
-            if (cancelFilterBtn) {
-                cancelFilterBtn.addEventListener('click', closeFilterModal);
-            }
-            if (submitFilterBtn) {
-                submitFilterBtn.addEventListener('click', submitFilter);
-            }
-            if (addFilterCriterionBtn) {
-                addFilterCriterionBtn.addEventListener('click', addFilterCriterion);
-            }
-            
-            const handleFiles = (files) => {
-                uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '[]');
-                
-                const filePromises = Array.from(files).map(file => {
-                    return new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            uploadedFiles.push({
-                                name: file.name,
-                                content: e.target.result,
-                                date: new Date().toISOString()
-                            });
-                            resolve();
-                        };
-                        reader.onerror = (e) => {
-                            reject(e);
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                });
-                
-                Promise.all(filePromises).then(() => {
-                    localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
-                    renderFileList();
-                }).catch(error => {
-                    showMessageBox('Upload Error', 'Failed to read one or more files.');
-                });
-            }
-
-            const renderFileList = () => {
-                fileList.innerHTML = '';
-                uploadedFiles.forEach((file, index) => {
-                    const fileItem = document.createElement('div');
-                    fileItem.classList.add('file-list-item');
-                    fileItem.innerHTML = `
-                        <span>${file.name}</span>
-                        <span class="remove-file-btn" data-index="${index}">&times;</span>
-                    `;
-                    fileList.appendChild(fileItem);
-                });
-                document.querySelectorAll('.remove-file-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const indexToRemove = parseInt(e.target.dataset.index);
-                        uploadedFiles.splice(indexToRemove, 1);
-                        localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
-                        renderFileList();
-                    });
-                });
-            };
-
-            const handleDragOver = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                e.target.classList.add('drag-over');
-            };
-
-            const handleDragLeave = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                e.target.classList.remove('drag-over');
-            };
-
-            const handleDrop = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                e.target.classList.remove('drag-over');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    handleFiles(files);
-                }
-            };
-            
-            if (dropzone) {
-                dropzone.addEventListener('click', () => {
-                    uploadDocument.click();
-                });
-            }
-            if (uploadDocument) {
-                uploadDocument.addEventListener('change', (e) => {
-                    handleFiles(e.target.files);
-                });
-            }
-
-            applyColumnPreferences();
-            addTaskIdLinkListeners();
+    document.getElementById('addNewPreferenceBtn').addEventListener('click', () => {
+        showMessageBox('Feature Coming Soon', 'Saving new column preferences is a feature currently under development!');
+    });
+    
+    // Function to save task data to local storage when a link is clicked
+    window.saveTaskDataToStorage = function(taskId, sourceTable) {
+        let dataArray = [];
+        if (sourceTable === 'collectionsTaskTable') {
+            dataArray = JSON.parse(localStorage.getItem('collectionsTasksData')) || [];
+        }
+        const taskData = dataArray.find(task => task.taskId === taskId);
+        if (taskData) {
+            localStorage.setItem('selectedTask', JSON.stringify(taskData));
+            localStorage.setItem('selectedTaskSource', sourceTable);
+        }
+    }
+    
+    function addTaskIdLinkListeners() {
+        document.querySelectorAll('.task-id-link').forEach(link => {
+            link.addEventListener('click', (event) => {
+                const taskId = event.target.dataset.taskId;
+                const sourceTable = event.target.closest('table').id;
+                saveTaskDataToStorage(taskId, sourceTable);
+            });
         });
+    }
+    
+    const filterableFields = [
+        { key: 'status', display: 'Status', type: 'select', options: ['Active', 'Completed', 'Escalated', 'Follow Up', 'Paused'] },
+        { key: 'client', display: 'Client', type: 'select', options: ['ShadyInsurance', 'NotOKInsurance', 'WalkItOffIns'] },
+        { key: 'healthSystem', display: 'Health System', type: 'select', options: healthSystems },
+        { key: 'overpayment', display: 'Overpayment Amount', type: 'select', options: ['Under 1000', '1000-5000', 'Over 5000'] },
+        { key: 'assignee', display: 'Assignee', type: 'select', options: ['Clark Kent', 'Steve Rogers', 'Natasha Romanoff', 'Unassigned'] },
+        { key: 'age', display: 'Age (days)', type: 'input' },
+        { key: 'lifecycle', display: 'Lifecycle', type: 'select', options: ['Collections'] }
+    ];
+
+    let filterCriteria = [];
+
+    function renderFilterCriteria() {
+        filterCriteriaContainer.innerHTML = '';
+        filterCriteria.forEach((criterion, index) => {
+            const criterionDiv = document.createElement('div');
+            criterionDiv.classList.add('filter-criterion-row', 'flex', 'items-center', 'gap-2', 'mb-2');
+            criterionDiv.innerHTML = `
+                <div class="form-group !mb-0 flex-grow">
+                    <label for="filterField${index}" class="block text-xs font-medium text-neutral-700 mb-1">Filter ${index + 1} <span class="text-red-500">*</span></label>
+                    <select id="filterField${index}" class="filter-input w-full !mb-0" data-index="${index}" data-type="field">
+                        <option value="">Select Field</option>
+                        ${filterableFields.map(field => `<option value="${field.key}" ${criterion.field === field.key ? 'selected' : ''}>${field.display}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="form-group !mb-0 flex-grow">
+                    <label for="filterValue${index}" class="block text-xs font-medium text-neutral-700 mb-1">Value <span class="text-red-500">*</span></label>
+                    ${getFilterValueInputHtml(criterion.field, criterion.value, index)}
+                </div>
+                <button class="remove-filter-btn" data-index="${index}">-</button>
+                ${index === filterCriteria.length - 1 ? '<button class="add-filter-btn">+</button>' : ''}
+            `;
+            filterCriteriaContainer.appendChild(criterionDiv);
+        });
+
+        filterCriteriaContainer.querySelectorAll('select[data-type="field"]').forEach(select => {
+            select.addEventListener('change', handleFilterFieldChange);
+        });
+        filterCriteriaContainer.querySelectorAll('.remove-filter-btn').forEach(button => {
+            button.addEventListener('click', handleRemoveFilterCriterion);
+        });
+        const lastAddButton = filterCriteriaContainer.querySelector('.add-filter-btn');
+        if (lastAddButton) {
+            lastAddButton.addEventListener('click', addFilterCriterion);
+        }
+        filterCriteriaContainer.querySelectorAll('input[data-type="value"], select[data-type="value"]').forEach(input => {
+            input.addEventListener('change', handleFilterValueChange);
+            input.addEventListener('input', handleFilterValueChange);
+        });
+    }
+
+    function getFilterValueInputHtml(fieldKey, currentValue, index) {
+        const field = filterableFields.find(f => f.key === fieldKey);
+        if (!field) {
+            return `<input type="text" id="filterValue${index}" class="filter-input w-full !mb-0" data-index="${index}" data-type="value" value="${currentValue || ''}" placeholder="Enter value">`;
+        }
+        if (field.type === 'select') {
+            return `
+                <select id="filterValue${index}" class="filter-input w-full !mb-0" data-index="${index}" data-type="value">
+                    <option value="">Select Value</option>
+                    ${field.options.map(option => `<option value="${option}" ${currentValue === option ? 'selected' : ''}>${option}</option>`).join('')}
+                </select>
+            `;
+        } else if (field.type === 'input') {
+            return `<input type="text" id="filterValue${index}" class="filter-input w-full !mb-0" data-index="${index}" data-type="value" value="${currentValue || ''}" placeholder="Enter value">`;
+        }
+        return '';
+    }
+
+    function addFilterCriterion() {
+        filterCriteria.push({ field: '', value: '' });
+        renderFilterCriteria();
+    }
+
+    function handleRemoveFilterCriterion(event) {
+        const index = parseInt(event.target.dataset.index);
+        filterCriteria.splice(index, 1);
+        renderFilterCriteria();
+    }
+
+    function handleFilterFieldChange(event) {
+        const index = parseInt(event.target.dataset.index);
+        filterCriteria[index].field = event.target.value;
+        filterCriteria[index].value = '';
+        renderFilterCriteria();
+    }
+
+    function handleFilterValueChange(event) {
+        const index = parseInt(event.target.dataset.index);
+        filterCriteria[index].value = event.target.value;
+    }
+
+    function openFilterModal() {
+        filterCriteria = [{ field: '', value: '' }];
+        renderFilterCriteria();
+        if (filterModal) {
+            filterModal.classList.remove('hidden');
+        }
+    }
+
+    function closeFilterModal() {
+        if (filterModal) {
+            filterModal.classList.add('hidden');
+        }
+    }
+
+    function submitFilter() {
+        const filterSetName = filterSetNameInput.value.trim();
+        if (!filterSetName) {
+            showMessageBox('Input Required', 'Please enter a name for the filter set.');
+            return;
+        }
+
+        let allCriteriaValid = true;
+        filterCriteria.forEach((criterion) => {
+            if (!criterion.field || !criterion.value) {
+                allCriteriaValid = false;
+            }
+        });
+
+        if (!allCriteriaValid) {
+            showMessageBox('Input Required', 'Please ensure all filter fields and values are selected/entered.');
+            return;
+        }
+
+        let filterSummary = `Filter Set Name: ${filterSetName}\n`;
+        filterSummary += `Set as Default: ${setAsDefaultCheckbox.checked ? 'Yes' : 'No'}\n\n`;
+        filterSummary += 'Applied Filters:\n';
+        filterCriteria.forEach(criterion => {
+            const fieldDisplay = filterableFields.find(f => f.key === criterion.field)?.display || criterion.field;
+            filterSummary += `- ${fieldDisplay}: ${criterion.value}\n`;
+        });
+
+        showMessageBox('Filter Applied', filterSummary);
+        closeFilterModal();
+    }
+
+    if (filterIconCollectionsTasks) {
+        filterIconCollectionsTasks.addEventListener('click', openFilterModal);
+    }
+
+    if (closeFilterModalBtn) {
+        closeFilterModalBtn.addEventListener('click', closeFilterModal);
+    }
+    if (cancelFilterBtn) {
+        cancelFilterBtn.addEventListener('click', closeFilterModal);
+    }
+    if (submitFilterBtn) {
+        submitFilterBtn.addEventListener('click', submitFilter);
+    }
+    if (addFilterCriterionBtn) {
+        addFilterCriterionBtn.addEventListener('click', addFilterCriterion);
+    }
+    
+    const handleFiles = (files) => {
+        uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '[]');
+        
+        const filePromises = Array.from(files).map(file => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    uploadedFiles.push({
+                        name: file.name,
+                        content: e.target.result,
+                        date: new Date().toISOString()
+                    });
+                    resolve();
+                };
+                reader.onerror = (e) => {
+                    reject(e);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+        
+        Promise.all(filePromises).then(() => {
+            localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+            renderFileList();
+        }).catch(error => {
+            showMessageBox('Upload Error', 'Failed to read one or more files.');
+        });
+    }
+
+    const renderFileList = () => {
+        fileList.innerHTML = '';
+        uploadedFiles.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.classList.add('file-list-item');
+            fileItem.innerHTML = `
+                <span>${file.name}</span>
+                <span class="remove-file-btn" data-index="${index}">&times;</span>
+            `;
+            fileList.appendChild(fileItem);
+        });
+        document.querySelectorAll('.remove-file-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const indexToRemove = parseInt(e.target.dataset.index);
+                uploadedFiles.splice(indexToRemove, 1);
+                localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                renderFileList();
+            });
+        });
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.target.classList.add('drag-over');
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.target.classList.remove('drag-over');
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.target.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFiles(files);
+        }
+    };
+    
+    if (dropzone) {
+        dropzone.addEventListener('click', () => {
+            uploadDocument.click();
+        });
+    }
+    if (uploadDocument) {
+        uploadDocument.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+    }
+
+    applyColumnPreferences(currentFilteredData);
+    addTaskIdLinkListeners();
+});
     </script>
 </body>
 </html>
