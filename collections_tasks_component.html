@@ -1313,6 +1313,7 @@
             const setAsDefaultCheckbox = document.getElementById('setAsDefault');
             const filterCriteriaContainer = document.getElementById('filterCriteriaContainer');
             const addFilterCriterionBtn = document.getElementById('addFilterCriterionBtn');
+            const summaryCardContainer = document.getElementById('summaryCardContainer');
 
             const dropzone = document.getElementById('dropzone');
             const fileList = document.getElementById('fileList');
@@ -2362,10 +2363,10 @@
         return Math.floor(diffTime / (1000 * 60 * 60 * 24));
     }
 
-    let currentFilteredData = collectionsTasksData;
+    let currentFilteredData = [];
     let activeFilter = null;
 
-    function applyColumnPreferences(dataToDisplay = collectionsTasksData) {
+    function applyColumnPreferences(dataToDisplay) {
         const updateTable = (table, dataArray, sourceTable) => {
             if (!table) return;
 
@@ -2434,9 +2435,8 @@
         addEllipsisListeners();
     }
 
-    function generateSummaryCards() {
-        const cardContainer = document.getElementById('summaryCardContainer');
-        cardContainer.innerHTML = '';
+    function generateSummaryCards(collectionsTasksData) {
+        summaryCardContainer.innerHTML = '';
         
         const summaryData = {};
         
@@ -2466,10 +2466,6 @@
             card.dataset.client = summaryData[key].client;
             card.dataset.healthSystem = summaryData[key].healthSystem;
             
-            if (activeFilter && activeFilter.client === summaryData[key].client && activeFilter.healthSystem === summaryData[key].healthSystem) {
-                card.classList.add('active-filter');
-            }
-
             const formattedBalance = `$${(summaryData[key].totalBalance / 1000).toFixed(1)}K`;
 
             card.innerHTML = `
@@ -2492,8 +2488,7 @@
             `;
             
             card.addEventListener('click', () => {
-                if (card.classList.contains('active-filter')) {
-                    // Clicking the active filter removes it
+                if (activeFilter && activeFilter.client === card.dataset.client && activeFilter.healthSystem === card.dataset.healthSystem) {
                     activeFilter = null;
                 } else {
                     activeFilter = { client: card.dataset.client, healthSystem: card.dataset.healthSystem };
@@ -2501,52 +2496,67 @@
                 updateFilterAndGrid();
             });
             
-            cardContainer.appendChild(card);
+            summaryCardContainer.appendChild(card);
+        }
+        updateCardActiveState();
+    }
+
+    function updateCardActiveState() {
+        const summaryCards = document.querySelectorAll('.summary-card');
+        summaryCards.forEach(card => card.classList.remove('active-filter'));
+
+        if (activeFilter) {
+            const activeCard = document.querySelector(`.summary-card[data-client="${activeFilter.client}"][data-health-system="${activeFilter.healthSystem}"]`);
+            if (activeCard) {
+                activeCard.classList.add('active-filter');
+            }
+            document.getElementById('currentSectionTitle').textContent = `Collections Tasks - ${activeFilter.client} / ${activeFilter.healthSystem}`;
+        } else {
+            document.getElementById('currentSectionTitle').textContent = 'Collections Tasks';
         }
     }
 
     function updateFilterAndGrid() {
-        const collectionsTasks = JSON.parse(localStorage.getItem('collectionsTasksData')) || collectionsTasksData;
-        const summaryCards = document.querySelectorAll('.summary-card');
-        summaryCards.forEach(card => card.classList.remove('active-filter'));
-
+        const collectionsTasks = JSON.parse(localStorage.getItem('collectionsTasksData'));
+        
+        let filteredData = collectionsTasks;
         if (initialClientFilter && initialHealthSystemFilter) {
-            currentFilteredData = collectionsTasks.filter(task =>
+            filteredData = collectionsTasks.filter(task =>
                 task.client === initialClientFilter && task.healthSystem === initialHealthSystemFilter
             );
-            document.getElementById('currentSectionTitle').textContent = `Collections Tasks - ${initialClientFilter} / ${initialHealthSystemFilter}`;
-            // Find and activate the corresponding card in case we're on the tasks page itself
-            const activeCard = document.querySelector(`.summary-card[data-client="${initialClientFilter}"][data-health-system="${initialHealthSystemFilter}"]`);
-            if (activeCard) {
-                activeCard.classList.add('active-filter');
-            }
-        } else {
-            currentFilteredData = collectionsTasks;
-            document.getElementById('currentSectionTitle').textContent = 'Collections Tasks';
+            activeFilter = { client: initialClientFilter, healthSystem: initialHealthSystemFilter };
+        } else if (activeFilter) {
+            filteredData = collectionsTasks.filter(task =>
+                task.client === activeFilter.client && task.healthSystem === activeFilter.healthSystem
+            );
         }
 
+        currentFilteredData = filteredData;
         applyColumnPreferences(currentFilteredData);
+        updateCardActiveState();
     }
     
     // Get existing data from localStorage or use the imported data
-    let initialCollectionsData = JSON.parse(localStorage.getItem('collectionsTasksData')) || collectionsTasksData;
-    if (initialCollectionsData.length !== collectionsTasksData.length) {
-        localStorage.setItem('collectionsTasksData', JSON.stringify(collectionsTasksData));
-        initialCollectionsData = collectionsTasksData;
-    }
-    
-    collectionsTasksData.forEach(task => {
-        const storedTask = initialCollectionsData.find(t => t.taskId === task.taskId);
-        if (storedTask) {
-            task.status = storedTask.status;
-            task.followUpDate = storedTask.followUpDate;
-            task.isFlagged = storedTask.isFlagged;
+    import('./collections_data.js').then(({ collectionsTasksData }) => {
+        let localData = JSON.parse(localStorage.getItem('collectionsTasksData'));
+        if (!localData) {
+            localStorage.setItem('collectionsTasksData', JSON.stringify(collectionsTasksData));
+            localData = collectionsTasksData;
         }
+        
+        const updatedData = collectionsTasksData.map(task => {
+            const storedTask = localData.find(st => st.taskId === task.taskId);
+            if (storedTask) {
+                return { ...task, ...storedTask };
+            }
+            return task;
+        });
+        localStorage.setItem('collectionsTasksData', JSON.stringify(updatedData));
+        
+        generateSummaryCards(updatedData);
+        updateFilterAndGrid();
     });
-    localStorage.setItem('collectionsTasksData', JSON.stringify(collectionsTasksData));
-    
-    generateSummaryCards();
-    updateFilterAndGrid();
+
 
     document.getElementById('addNewPreferenceBtn').addEventListener('click', () => {
         showMessageBox('Feature Coming Soon', 'Saving new column preferences is a feature currently under development!');
@@ -2814,15 +2824,26 @@
     }
 
     // Initial check and filtering on page load
-    const collectionsTasks = JSON.parse(localStorage.getItem('collectionsTasksData')) || collectionsTasksData;
-    let filteredData = collectionsTasks;
-    if (initialClientFilter && initialHealthSystemFilter) {
-        filteredData = collectionsTasks.filter(task =>
-            task.client === initialClientFilter && task.healthSystem === initialHealthSystemFilter
-        );
-    }
+    import('./collections_data.js').then(({ collectionsTasksData }) => {
+        let localData = JSON.parse(localStorage.getItem('collectionsTasksData'));
+        if (!localData) {
+            localStorage.setItem('collectionsTasksData', JSON.stringify(collectionsTasksData));
+            localData = collectionsTasksData;
+        }
+        
+        const updatedData = collectionsTasksData.map(task => {
+            const storedTask = localData.find(st => st.taskId === task.taskId);
+            if (storedTask) {
+                return { ...task, ...storedTask };
+            }
+            return task;
+        });
+        localStorage.setItem('collectionsTasksData', JSON.stringify(updatedData));
+        
+        generateSummaryCards(updatedData);
+        updateFilterAndGrid();
+    });
     
-    applyColumnPreferences(filteredData);
     addTaskIdLinkListeners();
 });
     </script>
