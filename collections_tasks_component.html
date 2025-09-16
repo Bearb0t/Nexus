@@ -2488,12 +2488,17 @@
             `;
             
             card.addEventListener('click', () => {
-                if (activeFilter && activeFilter.client === card.dataset.client && activeFilter.healthSystem === card.dataset.healthSystem) {
-                    activeFilter = null;
+                const currentUrl = new URL(window.location.href);
+                const currentClient = currentUrl.searchParams.get('client');
+                const currentHealthSystem = currentUrl.searchParams.get('healthSystem');
+
+                if (currentClient === card.dataset.client && currentHealthSystem === card.dataset.healthSystem) {
+                    // Clicking the active filter clears it
+                    window.location.href = 'collections_tasks_component.html';
                 } else {
-                    activeFilter = { client: card.dataset.client, healthSystem: card.dataset.healthSystem };
+                    // Otherwise, apply the new filter
+                    window.location.href = `collections_tasks_component.html?client=${encodeURIComponent(card.dataset.client)}&healthSystem=${encodeURIComponent(card.dataset.healthSystem)}`;
                 }
-                updateFilterAndGrid();
             });
             
             summaryCardContainer.appendChild(card);
@@ -2505,12 +2510,16 @@
         const summaryCards = document.querySelectorAll('.summary-card');
         summaryCards.forEach(card => card.classList.remove('active-filter'));
 
-        if (activeFilter) {
-            const activeCard = document.querySelector(`.summary-card[data-client="${activeFilter.client}"][data-health-system="${activeFilter.healthSystem}"]`);
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientFilter = urlParams.get('client');
+        const healthSystemFilter = urlParams.get('healthSystem');
+
+        if (clientFilter && healthSystemFilter) {
+            const activeCard = document.querySelector(`.summary-card[data-client="${clientFilter}"][data-health-system="${healthSystemFilter}"]`);
             if (activeCard) {
                 activeCard.classList.add('active-filter');
             }
-            document.getElementById('currentSectionTitle').textContent = `Collections Tasks - ${activeFilter.client} / ${activeFilter.healthSystem}`;
+            document.getElementById('currentSectionTitle').textContent = `Collections Tasks - ${clientFilter} / ${healthSystemFilter}`;
         } else {
             document.getElementById('currentSectionTitle').textContent = 'Collections Tasks';
         }
@@ -2518,16 +2527,14 @@
 
     function updateFilterAndGrid() {
         const collectionsTasks = JSON.parse(localStorage.getItem('collectionsTasksData'));
-        
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientFilter = urlParams.get('client');
+        const healthSystemFilter = urlParams.get('healthSystem');
+
         let filteredData = collectionsTasks;
-        if (initialClientFilter && initialHealthSystemFilter) {
+        if (clientFilter && healthSystemFilter) {
             filteredData = collectionsTasks.filter(task =>
-                task.client === initialClientFilter && task.healthSystem === initialHealthSystemFilter
-            );
-            activeFilter = { client: initialClientFilter, healthSystem: initialHealthSystemFilter };
-        } else if (activeFilter) {
-            filteredData = collectionsTasks.filter(task =>
-                task.client === activeFilter.client && task.healthSystem === activeFilter.healthSystem
+                task.client === clientFilter && task.healthSystem === healthSystemFilter
             );
         }
 
@@ -2545,7 +2552,7 @@
         }
         
         const updatedData = collectionsTasksData.map(task => {
-            const storedTask = localData.find(st => st.taskId === task.taskId);
+            const storedTask = localData.find(st => t.taskId === task.taskId);
             if (storedTask) {
                 return { ...task, ...storedTask };
             }
@@ -2832,7 +2839,7 @@
         }
         
         const updatedData = collectionsTasksData.map(task => {
-            const storedTask = localData.find(st => st.taskId === task.taskId);
+            const storedTask = localData.find(st => t.taskId === task.taskId);
             if (storedTask) {
                 return { ...task, ...storedTask };
             }
