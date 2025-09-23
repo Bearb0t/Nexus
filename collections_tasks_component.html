@@ -516,9 +516,15 @@
             color: #2D3748;
         }
         /* New and fixed grid styles for modals */
+        .resolve-grid-scroll-container {
+            overflow-x: auto;
+        }
+        .resolve-grid-inner-container {
+            min-width: 1220px;
+        }
         .resolve-grid-container {
             display: grid;
-            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(150px, 1.5fr) minmax(50px, 0.5fr);
+            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(110px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(150px, 1.5fr) minmax(50px, 0.5fr);
             gap: 0.5rem;
             align-items: center;
         }
@@ -529,7 +535,7 @@
             border-bottom: 1px solid #E2E8F0;
             text-align: left;
             display: grid;
-            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(150px, 1.5fr) minmax(50px, 0.5fr);
+            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(110px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(150px, 1.5fr) minmax(50px, 0.5fr);
             gap: 0.5rem;
         }
         .resolve-grid-header > div,
@@ -545,7 +551,7 @@
         }
         .resolve-grid-row {
             display: grid;
-            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(150px, 1.5fr) minmax(50px, 0.5fr);
+            grid-template-columns: minmax(100px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(110px, 1fr) minmax(120px, 1fr) minmax(200px, 2fr) minmax(150px, 1.5fr) minmax(50px, 0.5fr);
             gap: 0.5rem;
             align-items: center;
         }
@@ -712,6 +718,7 @@
                                 <th data-column-name="Follow Up Date">Follow Up Date</th>
                                 <th data-column-name="Age (days)">Age (days)</th>
                                 <th data-column-name="Claim ID">Claim ID</th>
+                                <th data-column-name="Offset Req">Offset Req</th>
                                 <th data-column-name="Client Claim Num">Client Claim Num</th>
                                 <th data-column-name="Lifecycle">Lifecycle</th>
                                 <th data-column-name="Flag">Flag</th>
@@ -821,6 +828,7 @@
                             <th>Follow Up Date</th>
                             <th>Age (days)</th>
                             <th>Claim ID</th>
+                            <th>Offset Req</th>
                             <th>Client Claim Num</th>
                             <th>Lifecycle</th>
                             <th>Flag</th>
@@ -849,61 +857,65 @@
     
     <!-- New: Resolve Collections Tasks Modal -->
     <div id="resolveCollectionsTasksModal" class="modal-overlay hidden">
-        <div class="modal-content !max-w-screen-lg">
+        <div class="modal-content !max-w-screen-xl">
             <div class="modal-header">
                 <h3 class="text-xl font-semibold text-neutral-800">Resolve Collection Task(s)</h3>
                 <button class="text-gray-500 hover:text-gray-700 text-2xl" id="closeResolveCollectionsTasksModalBtn">&times;</button>
             </div>
             
-            <div id="resolveGridWrapper" class="flex flex-col gap-2 mb-4">
-                <div class="resolve-grid-header">
-                    <div>Task ID</div>
-                    <div>Activity Type</div>
-                    <div>Resolution</div>
-                    <div>Note Template</div>
-                    <div>Note</div>
-                    <div>Attached Documents</div>
-                    <div class="text-center">Flag</div>
+            <div id="resolveGridWrapper" class="resolve-grid-scroll-container mb-4">
+                <div class="resolve-grid-inner-container">
+                    <div class="resolve-grid-header mb-2">
+                        <div>Task ID</div>
+                        <div>Activity Type</div>
+                        <div>Resolution</div>
+                        <div>Offset Req</div>
+                        <div>Note Template</div>
+                        <div>Note</div>
+                        <div>Attached Documents</div>
+                        <div class="text-center">Flag</div>
+                    </div>
+                    <div id="collectionsApplyToAllRow" class="resolve-grid-row border border-blue-400 bg-blue-50 rounded-md mb-2">
+                        <div class="font-bold text-blue-700 flex items-center p-2">Apply to All</div>
+                        <div class="p-2">
+                            <select id="collectionsApplyToAllContactType" class="filter-input w-full !mb-0">
+                                <option value="">Select activity type</option>
+                                <option value="Email - w/ Contact">Email - w/ Contact</option>
+                                <option value="Email - No Contact">Email - No Contact</option>
+                                <option value="Fax">Fax</option>
+                                <option value="Call - VM">Call - VM</option>
+                                <option value="Call - Live Contact">Call - Live Contact</option>
+                            </select>
+                        </div>
+                        <div class="p-2">
+                            <select id="collectionsApplyToAllResolution" class="filter-input w-full !mb-0">
+                                <option value="">Select resolution</option>
+                                <option value="No Update">No Update</option>
+                                <option value="Provider Reviewing">Provider Reviewing</option>
+                                <option value="Provider Agrees to Pay">Provider Agrees to Pay</option>
+                                <option value="Offset Approved - Written">Offset Approved - Written</option>
+                                <option value="Offset Approved - Verbal">Offset Approved - Verbal</option>
+                                <option value="Provider Appealing">Provider Appealing</option>
+                            </select>
+                        </div>
+                        <div></div> <!-- Placeholder for Offset Req column -->
+                        <div class="p-2">
+                            <select id="collectionsApplyToAllNoteTemplate" class="filter-input w-full !mb-0">
+                                <option value="">Select a template</option>
+                                <option value="Collections Template 1">Collections Template: Payment received</option>
+                                <option value="Collections Template 2">Collections Template: Follow-up needed</option>
+                            </select>
+                        </div>
+                        <div class="p-2">
+                            <textarea id="collectionsApplyToAllNoteTextarea" class="filter-input w-full !mb-0 note-textarea" rows="1" placeholder="Enter note"></textarea>
+                        </div>
+                        <div></div> <!-- Placeholder for documents column -->
+                        <div class="flex items-center justify-center p-2">
+                            <input type="checkbox" id="collectionsApplyToAllFlag" title="Flag all selected tasks">
+                        </div>
+                    </div>
+                    <div id="collectionsTasksGridBody" class="resolve-grid-body"></div>
                 </div>
-                <div id="collectionsApplyToAllRow" class="resolve-grid-row border border-blue-400 bg-blue-50 rounded-md">
-                    <div class="font-bold text-blue-700 flex items-center p-2">Apply to All</div>
-                    <div class="p-2">
-                        <select id="collectionsApplyToAllContactType" class="filter-input w-full !mb-0">
-                            <option value="">Select activity type</option>
-                            <option value="Email - w/ Contact">Email - w/ Contact</option>
-                            <option value="Email - No Contact">Email - No Contact</option>
-                            <option value="Fax">Fax</option>
-                            <option value="Call - VM">Call - VM</option>
-                            <option value="Call - Live Contact">Call - Live Contact</option>
-                        </select>
-                    </div>
-                    <div class="p-2">
-                        <select id="collectionsApplyToAllResolution" class="filter-input w-full !mb-0">
-                            <option value="">Select resolution</option>
-                            <option value="No Update">No Update</option>
-                            <option value="Provider Reviewing">Provider Reviewing</option>
-                            <option value="Provider Agrees to Pay">Provider Agrees to Pay</option>
-                            <option value="Offset Approved - Written">Offset Approved - Written</option>
-                            <option value="Offset Approved - Verbal">Offset Approved - Verbal</option>
-                            <option value="Provider Appealing">Provider Appealing</option>
-                        </select>
-                    </div>
-                    <div class="p-2">
-                        <select id="collectionsApplyToAllNoteTemplate" class="filter-input w-full !mb-0">
-                            <option value="">Select a template</option>
-                            <option value="Collections Template 1">Collections Template: Payment received</option>
-                            <option value="Collections Template 2">Collections Template: Follow-up needed</option>
-                        </select>
-                    </div>
-                    <div class="p-2">
-                        <textarea id="collectionsApplyToAllNoteTextarea" class="filter-input w-full !mb-0 note-textarea" rows="1" placeholder="Enter note"></textarea>
-                    </div>
-                    <div></div> <!-- Placeholder for documents column -->
-                    <div class="flex items-center justify-center p-2">
-                        <input type="checkbox" id="collectionsApplyToAllFlag" title="Flag all selected tasks">
-                    </div>
-                </div>
-                <div id="collectionsTasksGridBody" class="resolve-grid-body"></div>
             </div>
 
             <div class="mt-4">
@@ -965,6 +977,7 @@
                             <th>Follow Up Date</th>
                             <th>Age (days)</th>
                             <th>Claim ID</th>
+                            <th>Offset Req</th>
                             <th>Client Claim Num</th>
                             <th>Lifecycle</th>
                             <th>Flag</th>
@@ -1055,6 +1068,7 @@
                             <th>Follow Up Date</th>
                             <th>Age (days)</th>
                             <th>Claim ID</th>
+                            <th>Offset Req</th>
                             <th>Client Claim Num</th>
                             <th>Lifecycle</th>
                             <th>Flag</th>
@@ -1130,6 +1144,7 @@
                             <th>Follow Up Date</th>
                             <th>Age (days)</th>
                             <th>Claim ID</th>
+                            <th>Offset Req</th>
                             <th>Client Claim Num</th>
                             <th>Lifecycle</th>
                             <th>Flag</th>
@@ -1585,6 +1600,7 @@
                                 <td>${task.followUpDate || '-'}</td>
                                 <td>${task.age || '-'}</td>
                                 <td>${task.claimId || '-'}</td>
+                                <td>${task.offsetReq || '-'}</td>
                                 <td>${task.clientClaimNum || '-'}</td>
                                 <td>${task.lifecycle || '-'}</td>
                                 <td>${task.isFlagged ? '&#x1F6A9;' : '-'}</td>
@@ -1777,6 +1793,7 @@
                                 <option value="Provider Appealing">Provider Appealing</option>
                             </select>
                         </div>
+                        <div class="resolve-grid-item text-neutral-600">${task.offsetReq || '-'}</div>
                         <div>
                             <select id="noteTemplate-${task.taskId}" class="filter-input w-full !mb-0">
                                 <option value="">Select a template</option>
@@ -1848,6 +1865,7 @@
                             <td>${task.followUpDate || '-'}</td>
                             <td>${task.age || '-'}</td>
                             <td>${task.claimId || '-'}</td>
+                            <td>${task.offsetReq || '-'}</td>
                             <td>${task.clientClaimNum || '-'}</td>
                             <td>${task.lifecycle || '-'}</td>
                             <td>${task.isFlagged ? '&#x1F6A9;' : '-'}</td>
@@ -1978,6 +1996,7 @@
                             <td>${task.followUpDate || '-'}</td>
                             <td>${task.age || '-'}</td>
                             <td>${task.claimId || '-'}</td>
+                            <td>${task.offsetReq || '-'}</td>
                             <td>${task.clientClaimNum || '-'}</td>
                             <td>${task.lifecycle || '-'}</td>
                             <td>${task.isFlagged ? '&#x1F6A9;' : '-'}</td>
@@ -2185,6 +2204,7 @@
                             <td>${task.followUpDate || '-'}</td>
                             <td>${task.age || '-'}</td>
                             <td>${task.claimId || '-'}</td>
+                            <td>${task.offsetReq || '-'}</td>
                             <td>${task.clientClaimNum || '-'}</td>
                             <td>${task.lifecycle || '-'}</td>
                             <td>${task.isFlagged ? '&#x1F6A9;' : '-'}</td>
@@ -2309,6 +2329,7 @@
                 { display: 'Follow Up Date', key: 'followUpDate', show: true },
                 { display: 'Age (days)', key: 'age', show: true },
                 { display: 'Claim ID', key: 'claimId', show: true, isLink: true },
+                { display: 'Offset Req', key: 'offsetReq', show: true },
                 { display: 'Client Claim Num', key: 'clientClaimNum', show: true },
                 { display: 'Lifecycle', key: 'lifecycle', show: true },
                 { display: 'Flag', key: 'isFlagged', show: true },
@@ -2503,6 +2524,17 @@
                 row.innerHTML = rowHtml;
                 tbody.appendChild(row);
             });
+
+            // Add event listener for the 'select all' checkbox
+            const selectAllCheckbox = headerRow.querySelector('input[type="checkbox"]');
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', (event) => {
+                    const isChecked = event.target.checked;
+                    tbody.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                        checkbox.checked = isChecked;
+                    });
+                });
+            }
         };
         
         updateTable(collectionsTaskTable, dataToDisplay, 'collectionsTaskTable');
@@ -2996,12 +3028,20 @@
             localData = collectionsTasksData;
         }
         
-        const updatedData = collectionsTasksData.map(task => {
-            const storedTask = localData.find(st => st.taskId === task.taskId);
+        // Correctly merge stored data with new data to preserve user changes and new fields
+        const updatedData = collectionsTasksData.map(freshTask => {
+            const storedTask = localData.find(st => st.taskId === freshTask.taskId);
             if (storedTask) {
-                return { ...task, ...storedTask };
+                // If a task exists in storage, apply its user-modifiable fields to the fresh task data
+                return {
+                    ...freshTask,
+                    status: storedTask.status,
+                    followUpDate: storedTask.followUpDate,
+                    isFlagged: storedTask.isFlagged,
+                    attachments: storedTask.attachments || []
+                };
             }
-            return task;
+            return freshTask; // Otherwise, use the fresh task data
         });
         localStorage.setItem('collectionsTasksData', JSON.stringify(updatedData));
         
@@ -3014,3 +3054,4 @@
     </script>
 </body>
 </html>
+
